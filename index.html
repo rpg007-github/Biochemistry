@@ -63,8 +63,30 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
 /* TABLES */
 .simple-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.92rem;}
 .simple-table th{background:var(--accent-med);color:var(--accent-dark);text-align:left;padding:0.6rem 0.75rem;font-weight:600;border-bottom:2px solid var(--accent);}
-.simple-table td{padding:0.55rem 0.75rem;border-bottom:1px solid var(--border-light);}
+.simple-table td{padding:0.55rem 0.75rem;border-bottom:1px solid var(--border-light);vertical-align:top;}
 .simple-table tr:hover td{background:var(--accent-light);}
+
+/* INHIBITION TABLE - special styling for emphasis */
+.inhib-table td.good{color:var(--success);font-weight:600;}
+.inhib-table td.bad{color:var(--danger);font-weight:600;}
+.inhib-table td.yes{color:var(--success);font-weight:600;}
+.inhib-table td.no{color:var(--danger);font-weight:600;}
+
+/* INHIBITION MECHANISM CARDS */
+.inhib-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.25rem 0;}
+.inhib-card{border-radius:8px;padding:1rem;border:2px solid;}
+.inhib-card.comp{border-color:#3b82f6;background:#eff6ff;}
+.inhib-card.noncomp{border-color:#a855f7;background:#faf5ff;}
+.inhib-card.uncomp{border-color:#f97316;background:#fff7ed;}
+.inhib-card h4{font-family:'Crimson Pro',serif;font-size:1.05rem;margin-bottom:0.5rem;}
+.inhib-card h4.comp{color:#1d4ed8;}
+.inhib-card h4.noncomp{color:#7e22ce;}
+.inhib-card h4.uncomp{color:#c2410c;}
+.inhib-card p{font-size:0.88rem;margin-bottom:0.4rem;line-height:1.5;}
+.inhib-card .stat{font-family:'JetBrains Mono',monospace;font-size:0.82rem;padding:0.25rem 0.5rem;border-radius:4px;display:inline-block;margin:0.15rem 0.1rem;}
+.stat-up{background:#fde8e8;color:var(--danger);}
+.stat-down{background:#fde8e8;color:var(--danger);}
+.stat-nc{background:#e8f5e9;color:var(--success);}
 
 /* FORMULA */
 .formula{background:var(--formula-bg);border-left:3px solid var(--formula-border);padding:0.75rem 1rem;border-radius:0 6px 6px 0;margin:1rem 0;}
@@ -84,6 +106,13 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
 .example .label{font-weight:600;font-size:0.85rem;color:var(--success);margin-bottom:0.25rem;}
 .example .step{display:flex;gap:0.5rem;margin:0.4rem 0;font-size:0.93rem;}
 .example .sn{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--success);min-width:20px;}
+
+/* DIAGNOSTIC FLOWCHART */
+.flowchart{background:#f8f9ff;border:1px solid #c7d2fe;border-radius:8px;padding:1rem 1.25rem;margin:1rem 0;}
+.flowchart .fl-title{font-weight:700;font-size:0.85rem;color:#3730a3;margin-bottom:0.75rem;}
+.fl-step{display:flex;align-items:flex-start;gap:0.6rem;margin:0.4rem 0;font-size:0.9rem;}
+.fl-q{background:#e0e7ff;color:#3730a3;padding:0.2rem 0.5rem;border-radius:4px;font-weight:600;white-space:nowrap;font-size:0.82rem;}
+.fl-arrow{color:#6366f1;font-weight:700;margin:0 0.1rem;}
 
 /* PRACTICE TABS */
 .practice-header{font-family:'Crimson Pro',serif;font-size:1.5rem;margin:2rem 0 1rem;color:var(--accent-dark);text-align:center;}
@@ -156,6 +185,7 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
   .toc-grid{grid-template-columns:1fr;}
   .fc-card-wrapper{height:220px;}
   .tab-btn{font-size:0.82rem;padding:0.6rem 0.5rem;}
+  .inhib-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -202,31 +232,33 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
     <tr><th>Group</th><th>Character</th><th>Examples</th></tr>
     <tr><td><strong>Nonpolar</strong></td><td>Oily, avoids water, buries inside proteins</td><td>Ala (A), Val (V), Leu (L), Ile (I), Phe (F), Pro (P)</td></tr>
     <tr><td><strong>Polar uncharged</strong></td><td>Can hydrogen-bond with water, no formal charge</td><td>Ser (S), Thr (T), Asn (N), Gln (Q), Cys (C), Tyr (Y)</td></tr>
-    <tr><td><strong>Positive (+) at pH 7.4</strong></td><td>Basic side chains</td><td>Lys (K, pKa ~10.5), Arg (R, pKa ~12.5), His (H, pKa ~6.0)</td></tr>
-    <tr><td><strong>Negative (-) at pH 7.4</strong></td><td>Acidic side chains</td><td>Asp (D, pKa ~3.65), Glu (E, pKa ~4.25)</td></tr>
+    <tr><td><strong>Positive (+) at pH 7.4</strong></td><td>Basic side chains, carry positive charge at body pH</td><td>Lys (K, pKa ~10.5), Arg (R, pKa ~12.5), His (H, pKa ~6.0)</td></tr>
+    <tr><td><strong>Negative (&minus;) at pH 7.4</strong></td><td>Acidic side chains, carry negative charge at body pH</td><td>Asp (D, pKa ~3.65), Glu (E, pKa ~4.25)</td></tr>
   </table>
 
   <div class="pitfall">
-    <div class="label">Common Mistake</div>
-    "Nonpolar" and "uncharged" are not the same thing. Serine is polar and uncharged: it has no formal charge but still hydrogen-bonds with water. Leucine is nonpolar: it cannot even do that. It actively avoids water. Many students lose points by treating these as the same category.
+    <div class="label">Common Mistake: "Nonpolar" &ne; "Uncharged"</div>
+    These are two separate categories and students routinely confuse them. Serine is <strong>polar and uncharged</strong>: it has no formal charge but its &mdash;OH group still hydrogen-bonds with water. Leucine is <strong>nonpolar</strong>: it cannot even do that. It actively repels water. Many exam questions hinge on this distinction.
   </div>
 
   <h3>Calculating the Isoelectric Point (pI)</h3>
-  <p>The pI is the pH where the amino acid has zero net charge. For a simple amino acid (no ionizable side chain), average the two backbone pKa values.</p>
+  <p>The pI is the pH at which an amino acid has zero net charge. The rule: <strong>average the two pKa values that bracket the neutral (zwitterion) form.</strong></p>
+  <p>For a simple amino acid with no ionizable side chain, that is always pKa1 (carboxyl) and pKa2 (amino). For amino acids with ionizable side chains, the rule shifts depending on whether the side chain is acidic or basic.</p>
 
   <div class="example">
-    <div class="label">Worked Example: pI of Glycine</div>
-    <p>Glycine has pKa1 = 2.34 (carboxyl) and pKa2 = 9.60 (amino). No ionizable side chain.</p>
-    <div class="step"><span class="sn">1.</span><span>pI = (2.34 + 9.60) / 2 = <strong>5.97</strong></span></div>
-    <p>At pH 5.97, glycine has no net charge.</p>
+    <div class="label">Worked Example: pI of Glycine (simple amino acid)</div>
+    <p>Glycine: pKa1 = 2.34 (carboxyl), pKa2 = 9.60 (amino). No ionizable side chain.</p>
+    <div class="step"><span class="sn">1.</span><span>The zwitterion (net zero) is bracketed by pKa1 and pKa2.</span></div>
+    <div class="step"><span class="sn">2.</span><span>pI = (2.34 + 9.60) / 2 = <strong>5.97</strong></span></div>
+    <p>At pH 5.97, glycine carries no net charge.</p>
   </div>
 
   <div class="example">
     <div class="label">Worked Example: pI of Aspartate (acidic amino acid)</div>
-    <p>Asp has pKa1 = 2.10 (carboxyl), pKaR = 3.86 (side chain), pKa2 = 9.82 (amino). Which two do you average?</p>
-    <div class="step"><span class="sn">1.</span><span>Asp is acidic (extra COOH), so the two lowest pKa values bracket the zwitterion.</span></div>
+    <p>Asp: pKa1 = 2.10 (backbone carboxyl), pKaR = 3.86 (side chain carboxyl), pKa2 = 9.82 (amino).</p>
+    <div class="step"><span class="sn">1.</span><span>Asp has an extra acidic group. The zwitterion is bracketed by the <em>two lowest</em> pKa values.</span></div>
     <div class="step"><span class="sn">2.</span><span>pI = (2.10 + 3.86) / 2 = <strong>2.98</strong></span></div>
-    <p>Rule: acidic amino acids have LOW pI (average the two lowest). Basic amino acids have HIGH pI (average the two highest).</p>
+    <p><strong>Rule to remember:</strong> Acidic amino acids (Asp, Glu) have <em>low</em> pI &mdash; average the two lowest pKa values. Basic amino acids (Lys, Arg, His) have <em>high</em> pI &mdash; average the two highest pKa values.</p>
   </div>
 
   <h3>Protein Structure Levels</h3>
@@ -235,16 +267,16 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
   <div class="example">
     <div class="label">Worked Example: Sickle Cell Disease Step by Step</div>
     <p>Sickle cell is caused by one amino acid change: glutamate (charged, hydrophilic) to valine (nonpolar, hydrophobic) at position 6 of the beta-globin chain.</p>
-    <div class="step"><span class="sn">1.</span><span>Glu &#8594; Val creates a hydrophobic sticky patch on the surface of hemoglobin.</span></div>
-    <div class="step"><span class="sn">2.</span><span>Under low O&#8322; conditions (deoxy-Hb), this patch is exposed.</span></div>
-    <div class="step"><span class="sn">3.</span><span>That sticky patch binds to a complementary pocket on another hemoglobin molecule.</span></div>
-    <div class="step"><span class="sn">4.</span><span>Hemoglobin molecules chain together into long fibers, distorting the red blood cell into a sickle shape.</span></div>
-    <p>One amino acid change at the primary level cascades into a quaternary-level aggregation problem and a clinical disease. This is the clearest example of why primary structure matters.</p>
+    <div class="step"><span class="sn">1.</span><span>Glu &rarr; Val creates a hydrophobic sticky patch on the <em>surface</em> of hemoglobin (where it does not belong).</span></div>
+    <div class="step"><span class="sn">2.</span><span>Under low O&#8322; (deoxy-Hb), this patch is exposed.</span></div>
+    <div class="step"><span class="sn">3.</span><span>The sticky patch binds to a complementary pocket on another hemoglobin molecule.</span></div>
+    <div class="step"><span class="sn">4.</span><span>Hemoglobin molecules chain together into long fibers, distorting the RBC into a sickle shape.</span></div>
+    <p>One amino acid change (primary structure) cascades into a quaternary-level aggregation problem and a clinical disease. This is the clearest example of why primary structure matters.</p>
   </div>
 
   <div class="mnemonic">
-    <div class="label">Memory Trick</div>
-    <strong>Essential amino acids:</strong> "PVT TIM HALL" = Phe, Val, Thr, Trp, Ile, Met, His, Arg (conditionally), Leu, Lys.
+    <div class="label">Memory Trick: Essential Amino Acids</div>
+    <strong>"PVT TIM HALL"</strong> = Phe, Val, Thr, Trp, Ile, Met, His, Arg (conditionally essential), Leu, Lys. These must come from diet because the body cannot synthesize them.
   </div>
 </div>
 
@@ -252,44 +284,109 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
 <div class="card" id="s2">
   <h2><span class="num">02</span> Enzymes &amp; Kinetics</h2>
 
-  <p>Enzymes lower the activation energy of reactions without changing the equilibrium or the overall free energy change (delta-G). They speed up reactions that are already thermodynamically favorable. Most enzymes are proteins; a few are RNA (ribozymes).</p>
+  <p>Enzymes lower the activation energy of reactions without changing the equilibrium or the overall free energy change (&Delta;G). They speed up reactions that are already thermodynamically favorable but would otherwise be too slow. Most enzymes are proteins; a few are RNA (ribozymes).</p>
 
   <h3>Michaelis-Menten: Two Numbers That Tell You Everything</h3>
-  <p><strong>Vmax</strong> = the maximum rate when all active sites are saturated. <strong>Km</strong> = the substrate concentration at which velocity = Vmax/2. Low Km means high affinity (the enzyme reaches half-speed with very little substrate around).</p>
+  <p><strong>Vmax</strong> = the maximum reaction rate when every active site is saturated with substrate. <strong>Km</strong> = the substrate concentration at which velocity equals exactly Vmax/2. Think of Km as a measure of affinity: a <em>low</em> Km means the enzyme grabs its substrate tightly and reaches half-speed with very little substrate around. A <em>high</em> Km means the enzyme is a weak binder and needs a lot of substrate to work efficiently.</p>
 
   <div class="formula">
     <div class="fl">Michaelis-Menten Equation</div>
-    <code>v = (Vmax x [S]) / (Km + [S])</code>
+    <code>v = (Vmax &times; [S]) / (Km + [S])</code>
   </div>
 
   <div class="example">
     <div class="label">Worked Example: Comparing Two Enzymes</div>
-    <p>Enzyme A: Km = 0.1 mM, Vmax = 100 umol/min. Enzyme B: Km = 10 mM, Vmax = 100 umol/min. Both are in a solution with [S] = 0.1 mM. Which enzyme is working faster?</p>
-    <div class="step"><span class="sn">1.</span><span>Enzyme A: v = (100 x 0.1) / (0.1 + 0.1) = 10 / 0.2 = <strong>50 umol/min</strong> (half of Vmax, as expected since [S] = Km).</span></div>
-    <div class="step"><span class="sn">2.</span><span>Enzyme B: v = (100 x 0.1) / (10 + 0.1) = 10 / 10.1 = <strong>0.99 umol/min</strong> (barely working because [S] is way below its Km).</span></div>
-    <div class="step"><span class="sn">3.</span><span>Enzyme A is 50 times faster at this substrate concentration. Same Vmax, but the lower Km gives it a massive advantage at low [S].</span></div>
-    <p>This is exactly the kind of question that shows why Km matters clinically.</p>
+    <p>Enzyme A: Km = 0.1 mM, Vmax = 100 &micro;mol/min. Enzyme B: Km = 10 mM, Vmax = 100 &micro;mol/min. Both are in a solution with [S] = 0.1 mM. Which is working faster?</p>
+    <div class="step"><span class="sn">1.</span><span>Enzyme A: v = (100 &times; 0.1) / (0.1 + 0.1) = 10 / 0.2 = <strong>50 &micro;mol/min</strong> (half of Vmax &mdash; expected because [S] = Km).</span></div>
+    <div class="step"><span class="sn">2.</span><span>Enzyme B: v = (100 &times; 0.1) / (10 + 0.1) = 10 / 10.1 = <strong>~1 &micro;mol/min</strong> (barely moving because [S] is far below its Km).</span></div>
+    <div class="step"><span class="sn">3.</span><span>Same Vmax, but Enzyme A is ~50&times; faster at this concentration because its lower Km gives it a huge advantage when substrate is scarce.</span></div>
   </div>
 
-  <h3>Inhibition: What Changes and What Stays the Same</h3>
-  <table class="simple-table">
-    <tr><th>Type</th><th>Km</th><th>Vmax</th><th>Overcome by more [S]?</th></tr>
-    <tr><td><strong>Competitive</strong></td><td>Increases (apparent)</td><td>Unchanged</td><td>Yes</td></tr>
-    <tr><td><strong>Noncompetitive</strong></td><td>Unchanged</td><td>Decreases</td><td>No</td></tr>
-    <tr><td><strong>Uncompetitive</strong></td><td>Decreases</td><td>Decreases</td><td>No</td></tr>
+  <h3>Enzyme Inhibition: What Changes and What Stays the Same</h3>
+
+  <p>There are three types of reversible inhibition you must know. The key is understanding <em>where</em> the inhibitor binds and <em>what that does</em> to your kinetic parameters.</p>
+
+  <!-- THREE MECHANISM CARDS -->
+  <div class="inhib-grid">
+    <div class="inhib-card comp">
+      <h4 class="comp">Competitive</h4>
+      <p>Inhibitor binds the <strong>active site</strong> directly, competing with substrate for the same spot.</p>
+      <p>Because it physically blocks substrate, you need more [S] to reach Vmax &mdash; but with enough substrate, you can flood the enzyme and reach the same Vmax.</p>
+      <span class="stat stat-up">Km &uarr;</span>
+      <span class="stat stat-nc">Vmax unchanged</span>
+    </div>
+    <div class="inhib-card noncomp">
+      <h4 class="noncomp">Noncompetitive</h4>
+      <p>Inhibitor binds an <strong>allosteric site</strong> (elsewhere on the enzyme), not the active site. Substrate can still bind normally.</p>
+      <p>But once the inhibitor is bound, catalysis is impaired regardless of how much substrate you add. No amount of extra substrate can fix it.</p>
+      <span class="stat stat-nc">Km unchanged</span>
+      <span class="stat stat-down">Vmax &darr;</span>
+    </div>
+    <div class="inhib-card uncomp">
+      <h4 class="uncomp">Uncompetitive</h4>
+      <p>Inhibitor can <strong>only bind the enzyme-substrate complex</strong> (ES), not the free enzyme. This is the counterintuitive one.</p>
+      <p>Because it locks ES in place, substrate binds more tightly (Km drops). But catalysis is blocked, so Vmax also drops. Both go down together.</p>
+      <span class="stat stat-down">Km &darr;</span>
+      <span class="stat stat-down">Vmax &darr;</span>
+    </div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <table class="simple-table inhib-table">
+    <tr><th>Type</th><th>Binds where?</th><th>Km</th><th>Vmax</th><th>Overcome by more [S]?</th></tr>
+    <tr>
+      <td><strong>Competitive</strong></td>
+      <td>Active site</td>
+      <td class="bad">Increases</td>
+      <td class="good">Unchanged</td>
+      <td class="yes">Yes</td>
+    </tr>
+    <tr>
+      <td><strong>Noncompetitive</strong></td>
+      <td>Allosteric site</td>
+      <td class="good">Unchanged</td>
+      <td class="bad">Decreases</td>
+      <td class="no">No</td>
+    </tr>
+    <tr>
+      <td><strong>Uncompetitive</strong></td>
+      <td>ES complex only</td>
+      <td class="bad">Decreases</td>
+      <td class="bad">Decreases</td>
+      <td class="no">No</td>
+    </tr>
   </table>
 
+  <!-- DIAGNOSTIC FLOWCHART -->
+  <div class="flowchart">
+    <div class="fl-title">&#128270; How to Identify the Inhibitor Type from Data</div>
+    <div class="fl-step"><span class="fl-q">Step 1</span><span class="fl-arrow">&rarr;</span><span>Look at <strong>Vmax</strong> first. Did it change?</span></div>
+    <div class="fl-step"><span style="min-width:60px;"></span><span class="fl-arrow">&rarr;</span><span><strong>Vmax unchanged?</strong> It is <strong>Competitive</strong>. Done.</span></div>
+    <div class="fl-step"><span style="min-width:60px;"></span><span class="fl-arrow">&rarr;</span><span><strong>Vmax decreased?</strong> Go to Step 2.</span></div>
+    <div class="fl-step"><span class="fl-q">Step 2</span><span class="fl-arrow">&rarr;</span><span>Now look at <strong>Km</strong>. Did it change?</span></div>
+    <div class="fl-step"><span style="min-width:60px;"></span><span class="fl-arrow">&rarr;</span><span><strong>Km unchanged?</strong> It is <strong>Noncompetitive</strong>.</span></div>
+    <div class="fl-step"><span style="min-width:60px;"></span><span class="fl-arrow">&rarr;</span><span><strong>Km decreased?</strong> It is <strong>Uncompetitive</strong>.</span></div>
+  </div>
+
   <div class="example">
-    <div class="label">Worked Example: Identifying Inhibition Type</div>
-    <p>You run a kinetics experiment. Without inhibitor: Km = 5 mM, Vmax = 200. With inhibitor: Km = 5 mM, Vmax = 100. What type?</p>
-    <div class="step"><span class="sn">1.</span><span>Km is unchanged (still 5 mM).</span></div>
-    <div class="step"><span class="sn">2.</span><span>Vmax decreased (from 200 to 100).</span></div>
-    <div class="step"><span class="sn">3.</span><span>Km same + Vmax down = <strong>Noncompetitive inhibition.</strong></span></div>
+    <div class="label">Worked Example: Identifying Inhibition Type from Data</div>
+    <p>Without inhibitor: Km = 5 mM, Vmax = 200. With inhibitor: Km = 5 mM, Vmax = 100. What type?</p>
+    <div class="step"><span class="sn">1.</span><span>Check Vmax: decreased from 200 &rarr; 100. So it is <em>not</em> competitive (competitive leaves Vmax unchanged).</span></div>
+    <div class="step"><span class="sn">2.</span><span>Check Km: unchanged (still 5 mM). So it is <em>not</em> uncompetitive (uncompetitive decreases Km).</span></div>
+    <div class="step"><span class="sn">3.</span><span>Vmax down + Km unchanged = <strong>Noncompetitive inhibition.</strong></span></div>
+    <p>The inhibitor is binding an allosteric site. Substrate still binds normally (Km unchanged), but catalysis is impaired (Vmax down). No amount of extra substrate will restore full activity.</p>
   </div>
 
   <div class="mnemonic">
-    <div class="label">Memory Trick</div>
-    <strong>Competitive:</strong> the inhibitor <strong>competes</strong> for the active site, so you need more substrate to overcome it (Km goes up). <strong>Noncompetitive:</strong> inhibitor binds elsewhere and <strong>breaks</strong> the enzyme (Vmax goes down, Km unaffected).
+    <div class="label">Memory Trick: One Sentence Per Type</div>
+    <strong>Competitive:</strong> "Same site, more substrate wins." (Active site, Km up, Vmax okay.)<br>
+    <strong>Noncompetitive:</strong> "Different site, catalysis broken." (Allosteric site, Km fine, Vmax down.)<br>
+    <strong>Uncompetitive:</strong> "Only grabs when substrate is already there. Both go down." (Km down, Vmax down.)
+  </div>
+
+  <div class="pitfall">
+    <div class="label">The Uncompetitive Trap: Why Does Km Decrease?</div>
+    Students expect Km to stay the same or go up. Here is why it drops: the inhibitor can only bind the ES complex, which means it <em>stabilizes</em> the ES complex and prevents substrate from leaving. This makes it look like the enzyme is binding substrate more tightly (lower apparent Km). But the complex is then stuck and cannot complete the reaction (Vmax drops). Both parameters fall proportionally, which is the diagnostic signature.
   </div>
 </div>
 
@@ -313,11 +410,11 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
   </div>
 
   <h3>Polysaccharides</h3>
-  <p><strong>Starch</strong> (amylose + amylopectin) = plant storage, alpha-1,4 linkages (with alpha-1,6 branches in amylopectin). Humans digest it easily. <strong>Glycogen</strong> = animal storage, like amylopectin but more highly branched (branches every 8-12 residues). <strong>Cellulose</strong> = plant structural, beta-1,4 linkages. Humans cannot digest it because we lack the enzyme (cellulase) to break beta-1,4 bonds.</p>
+  <p><strong>Starch</strong> (amylose + amylopectin) = plant storage, alpha-1,4 linkages with alpha-1,6 branches in amylopectin. Humans digest it easily. <strong>Glycogen</strong> = animal storage, like amylopectin but more highly branched (every 8&ndash;12 residues), allowing faster glucose release. <strong>Cellulose</strong> = plant structural, beta-1,4 linkages. Humans cannot digest it because we lack cellulase to break beta-1,4 bonds.</p>
 
   <div class="example">
-    <div class="label">Same Sugar, Different Linkage</div>
-    <p>Starch and cellulose are both polymers of glucose. The only difference is alpha-1,4 (starch, digestible) versus beta-1,4 (cellulose, indigestible). One bond orientation is the difference between food and fiber.</p>
+    <div class="label">Same Sugar, Different Linkage = Completely Different Function</div>
+    <p>Starch and cellulose are both polymers of glucose. The only structural difference is alpha-1,4 (starch, digestible) vs. beta-1,4 (cellulose, indigestible). One bond orientation is the difference between food and fiber.</p>
   </div>
 </div>
 
@@ -327,49 +424,55 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
 
   <p>Lipids are hydrophobic or amphipathic molecules. The major categories are fatty acids, triacylglycerols (energy storage), phospholipids (membranes), steroids (cholesterol, hormones), and sphingolipids.</p>
 
-  <h3>Fatty Acids</h3>
-  <p><strong>Saturated</strong> = no double bonds, straight chains, pack tightly, solid at room temperature (butter, animal fat). <strong>Unsaturated</strong> = one or more double bonds create kinks, cannot pack as tightly, liquid at room temperature (olive oil, fish oil). More unsaturation = lower melting point = more fluid.</p>
+  <h3>Fatty Acids: Saturated vs. Unsaturated</h3>
+  <p><strong>Saturated</strong> = no double bonds, straight chains, pack tightly together, solid at room temperature (butter, animal fat). <strong>Unsaturated</strong> = one or more double bonds create kinks in the chain, cannot pack tightly, liquid at room temperature (olive oil, fish oil). More unsaturation = lower melting point = more fluid membrane.</p>
 
   <div class="example">
     <div class="label">Why Cold-Water Fish Have More Unsaturated Fats</div>
-    <p>At cold temperatures, saturated fats would solidify and membranes would become rigid. Cold-water fish incorporate more unsaturated fatty acids into their membranes to maintain fluidity at low temperatures. This is the same reason butter (saturated) is solid in your fridge but olive oil (unsaturated) stays liquid.</p>
+    <p>At cold temperatures, saturated fats would solidify and membranes would become rigid and non-functional. Cold-water fish incorporate more unsaturated fatty acids into their membranes to maintain fluidity at low temperatures. This is the same reason butter (saturated) is solid in your fridge while olive oil (unsaturated) stays liquid.</p>
   </div>
 
-  <h3>Cholesterol in Membranes</h3>
-  <p>Cholesterol is a fluidity buffer. At high temperatures, it restricts movement and reduces fluidity. At low temperatures, it prevents tight packing and increases fluidity. It keeps the membrane in a functional middle ground.</p>
+  <h3>Cholesterol: The Fluidity Buffer</h3>
+  <p>Cholesterol inserts between phospholipid tails in the membrane. At <strong>high temperatures</strong>, it restricts movement and reduces fluidity. At <strong>low temperatures</strong>, it prevents tight packing and increases fluidity. It keeps the membrane in the functional middle ground at both extremes.</p>
 
   <div class="formula">
-    <div class="fl">Energy Density</div>
-    <code>Fat: 9 kcal/g | Carbohydrate: 4 kcal/g | Protein: 4 kcal/g</code>
+    <div class="fl">Energy Density (per gram)</div>
+    <code>Fat: 9 kcal/g &nbsp;|&nbsp; Carbohydrate: 4 kcal/g &nbsp;|&nbsp; Protein: 4 kcal/g</code>
   </div>
-  <p>Fat stores more than twice the energy per gram because fatty acids are more reduced (more C-H bonds to oxidize) and stored anhydrously (without water), unlike glycogen which binds ~3g water per gram.</p>
+  <p>Fat stores more than twice the energy per gram because fatty acids are more reduced (more C&ndash;H bonds to oxidize) and stored without water, unlike glycogen which binds ~3 g water per gram of glycogen.</p>
 </div>
 
 <!-- ===== SECTION 5: GLYCOLYSIS ===== -->
 <div class="card" id="s5">
   <h2><span class="num">05</span> Glycolysis</h2>
 
-  <p>Glycolysis converts one glucose (6 carbons) into two pyruvate (3 carbons each) in the cytoplasm. It does not require oxygen. Net yield: 2 ATP and 2 NADH per glucose.</p>
+  <p>Glycolysis converts one glucose (6C) into two pyruvate (3C each) in the cytoplasm. It does not require oxygen. Net yield: <strong>2 ATP and 2 NADH</strong> per glucose. There is a trick: the first half of glycolysis <em>costs</em> 2 ATP (investment phase). The second half produces 4 ATP. Net = 2 ATP.</p>
 
   <h3>The Three Irreversible Steps (Rate-Limiting Enzymes)</h3>
   <table class="simple-table">
     <tr><th>Step</th><th>Enzyme</th><th>What It Does</th><th>Regulation</th></tr>
-    <tr><td>1</td><td><strong>Hexokinase</strong></td><td>Glucose &#8594; G6P (traps glucose in cell)</td><td>Inhibited by G6P</td></tr>
-    <tr><td>3</td><td><strong>PFK-1</strong> (rate-limiting)</td><td>F6P &#8594; F-1,6-BP (committed step)</td><td>Activated by AMP, F-2,6-BP. Inhibited by ATP, citrate.</td></tr>
-    <tr><td>10</td><td><strong>Pyruvate kinase</strong></td><td>PEP &#8594; Pyruvate</td><td>Activated by F-1,6-BP. Inhibited by ATP, alanine.</td></tr>
+    <tr><td>1</td><td><strong>Hexokinase</strong></td><td>Glucose &rarr; G6P (traps glucose inside the cell)</td><td>Inhibited by its product, G6P</td></tr>
+    <tr><td>3</td><td><strong>PFK-1</strong> (rate-limiting)</td><td>F6P &rarr; F-1,6-BP (the committed step &mdash; no turning back)</td><td>Activated by AMP, F-2,6-BP. Inhibited by ATP, citrate.</td></tr>
+    <tr><td>10</td><td><strong>Pyruvate kinase</strong></td><td>PEP &rarr; Pyruvate (final ATP-generating step)</td><td>Activated by F-1,6-BP. Inhibited by ATP, alanine.</td></tr>
   </table>
+
+  <div class="pitfall">
+    <div class="label">Why PFK-1 Is the True Rate-Limiting Step</div>
+    Hexokinase acts first, but PFK-1 is the <em>committed</em> step. Once F-1,6-bisphosphate is made, the cell is fully committed to completing glycolysis. Before that point, G6P could be diverted to glycogen synthesis or the pentose phosphate pathway. PFK-1 is also the most heavily regulated of the three enzymes, which is why it controls overall flux.
+  </div>
 
   <div class="example">
     <div class="label">Why Lactate? The NAD+ Problem</div>
-    <p>Glycolysis needs NAD+ to keep running (step 6 uses it). Normally, the mitochondria regenerate NAD+ via the electron transport chain. But without oxygen (anaerobic conditions):</p>
-    <div class="step"><span class="sn">1.</span><span>The ETC cannot run, so NADH piles up and NAD+ runs out.</span></div>
-    <div class="step"><span class="sn">2.</span><span>Lactate dehydrogenase converts pyruvate to lactate, regenerating NAD+ in the process.</span></div>
-    <div class="step"><span class="sn">3.</span><span>This lets glycolysis continue producing 2 ATP per glucose, which is not much but keeps you alive during a sprint.</span></div>
+    <p>Glycolysis needs NAD+ at step 6 (glyceraldehyde-3-phosphate dehydrogenase). Normally, the mitochondria regenerate NAD+ from NADH via the electron transport chain. But without oxygen:</p>
+    <div class="step"><span class="sn">1.</span><span>The ETC cannot run. NADH accumulates and NAD+ runs out.</span></div>
+    <div class="step"><span class="sn">2.</span><span>Lactate dehydrogenase (LDH) converts pyruvate &rarr; lactate, simultaneously converting NADH back to NAD+.</span></div>
+    <div class="step"><span class="sn">3.</span><span>This recycled NAD+ keeps glycolysis running, producing 2 ATP per glucose. Not much, but enough to sustain a sprint.</span></div>
+    <p>Lactate is not a metabolic dead end. It is exported to the liver (Cori cycle) and converted back to glucose.</p>
   </div>
 
   <div class="mnemonic">
     <div class="label">Memory Trick: PDH Coenzymes</div>
-    <strong>"Tender Loving Care For Nancy"</strong> = TPP, Lipoic acid, CoA, FAD, NAD+. Pyruvate dehydrogenase (the bridge between glycolysis and TCA) uses all five coenzymes.
+    <strong>"Tender Loving Care For Nancy"</strong> = TPP, Lipoic acid, CoA, FAD, NAD+. Pyruvate dehydrogenase (the bridge between glycolysis and TCA) requires all five.
   </div>
 </div>
 
@@ -377,45 +480,49 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
 <div class="card" id="s6">
   <h2><span class="num">06</span> TCA Cycle &amp; Oxidative Phosphorylation</h2>
 
-  <h3>The TCA Cycle (Citric Acid Cycle / Krebs Cycle)</h3>
-  <p>Acetyl-CoA (2C) enters by combining with oxaloacetate (4C) to form citrate (6C). Each turn releases 2 CO&#8322; and harvests electrons as 3 NADH, 1 FADH&#8322;, and 1 GTP. The main purpose of TCA is to generate electron carriers (NADH and FADH&#8322;) for the electron transport chain.</p>
+  <h3>The TCA Cycle: What It Actually Does</h3>
+  <p>Students often think the TCA cycle makes ATP. It mostly does not. Its real job is to strip electrons from carbon compounds and load them onto electron carriers (NADH and FADH&#8322;). Those carriers then take the electrons to the ETC, where the real ATP is made. Each turn of the cycle releases 2 CO&#8322; and produces 3 NADH, 1 FADH&#8322;, and 1 GTP.</p>
 
   <div class="mnemonic">
     <div class="label">TCA Intermediates in Order</div>
-    <strong>"Can I Keep Selling Succinyl For Malate, Officer?"</strong> = Citrate, Isocitrate, alpha-Ketoglutarate, Succinyl-CoA, Succinate, Fumarate, Malate, Oxaloacetate.
+    <strong>"Can I Keep Selling Succinyl For Malate, Officer?"</strong><br>
+    Citrate &rarr; Isocitrate &rarr; &alpha;-Ketoglutarate &rarr; Succinyl-CoA &rarr; Succinate &rarr; Fumarate &rarr; Malate &rarr; Oxaloacetate
   </div>
 
-  <h3>Oxidative Phosphorylation (ETC + ATP Synthase)</h3>
-  <p>NADH and FADH&#8322; donate electrons to the electron transport chain in the inner mitochondrial membrane. As electrons flow through Complexes I, III, and IV, protons (H+) are pumped into the intermembrane space, creating an electrochemical gradient. ATP synthase uses this gradient to make ATP.</p>
+  <h3>Oxidative Phosphorylation: The ETC + ATP Synthase</h3>
+  <p>NADH and FADH&#8322; donate electrons to the electron transport chain in the inner mitochondrial membrane. As electrons flow through the complexes, protons (H+) are pumped into the intermembrane space, creating an electrochemical gradient. ATP synthase uses the flow of protons back across the membrane to make ATP.</p>
 
   <table class="simple-table">
     <tr><th>Complex</th><th>Accepts From</th><th>Pumps H+?</th><th>Inhibited By</th></tr>
     <tr><td><strong>I</strong></td><td>NADH</td><td>Yes</td><td>Rotenone, barbiturates</td></tr>
-    <tr><td><strong>II</strong></td><td>FADH&#8322; (via succinate)</td><td>No</td><td>Malonate</td></tr>
+    <tr><td><strong>II</strong></td><td>FADH&#8322; (via succinate)</td><td><strong>No</strong></td><td>Malonate</td></tr>
     <tr><td><strong>III</strong></td><td>CoQH&#8322;</td><td>Yes</td><td>Antimycin A</td></tr>
     <tr><td><strong>IV</strong></td><td>Cytochrome c</td><td>Yes</td><td>Cyanide, CO</td></tr>
     <tr><td><strong>ATP Synthase (V)</strong></td><td>H+ gradient</td><td>Uses gradient</td><td>Oligomycin</td></tr>
   </table>
 
   <div class="pitfall">
-    <div class="label">Complex II Does NOT Pump Protons</div>
-    This is why FADH&#8322; yields ~1.5 ATP while NADH yields ~2.5 ATP. FADH&#8322; enters at Complex II, which skips the proton pumping that Complex I performs.
+    <div class="label">Complex II Does NOT Pump Protons &mdash; This Matters for ATP Yield</div>
+    FADH&#8322; enters at Complex II, which transfers electrons to CoQ but does <em>not</em> pump protons. This means FADH&#8322; contributes less to the proton gradient. Result: NADH yields ~2.5 ATP; FADH&#8322; yields only ~1.5 ATP.
   </div>
 
   <div class="example">
     <div class="label">Worked Example: Total ATP from One Glucose</div>
-    <div class="step"><span class="sn">1.</span><span>Glycolysis: 2 ATP + 2 NADH (each NADH = ~2.5 ATP via malate-aspartate shuttle) = 2 + 5 = 7</span></div>
-    <div class="step"><span class="sn">2.</span><span>PDH: 2 NADH (one per pyruvate) = 5 ATP</span></div>
-    <div class="step"><span class="sn">3.</span><span>TCA (x2 turns): 6 NADH (= 15 ATP) + 2 FADH&#8322; (= 3 ATP) + 2 GTP (= 2 ATP) = 20</span></div>
-    <div class="step"><span class="sn">4.</span><span>Total: 7 + 5 + 20 = <strong>~30-32 ATP</strong></span></div>
+    <div class="step"><span class="sn">1.</span><span>Glycolysis: 2 ATP (direct) + 2 NADH (&asymp; 5 ATP via malate-aspartate shuttle) = <strong>7 ATP</strong></span></div>
+    <div class="step"><span class="sn">2.</span><span>PDH bridge (2 pyruvates): 2 NADH &asymp; <strong>5 ATP</strong></span></div>
+    <div class="step"><span class="sn">3.</span><span>TCA (2 turns): 6 NADH (&asymp;15 ATP) + 2 FADH&#8322; (&asymp;3 ATP) + 2 GTP = <strong>20 ATP</strong></span></div>
+    <div class="step"><span class="sn">4.</span><span><strong>Total: 7 + 5 + 20 = ~30&ndash;32 ATP</strong></span></div>
+    <p>Modern values use P/O ratios (NADH = 2.5, FADH&#8322; = 1.5) rather than the old textbook values of 3 and 2. Expect to see ~30&ndash;32 on exams, not the outdated "36&ndash;38."</p>
   </div>
 
   <div class="example">
-    <div class="label">Diagnostic Reasoning: Inhibitor vs. Uncoupler</div>
-    <p>Scenario: You measure a cell and find oxygen consumption is HIGH but ATP production is LOW. What is happening?</p>
-    <div class="step"><span class="sn">1.</span><span>An ETC inhibitor (like cyanide) would stop electron flow, so oxygen consumption would DROP (electrons cannot reach O&#8322;).</span></div>
-    <div class="step"><span class="sn">2.</span><span>An uncoupler (like DNP or thermogenin) lets protons leak across the membrane, collapsing the gradient. The ETC runs FASTER trying to restore it (more O&#8322; consumed), but ATP synthase has no gradient to use (less ATP).</span></div>
-    <div class="step"><span class="sn">3.</span><span>Answer: <strong>uncoupler.</strong> O&#8322; consumption up + ATP down = energy wasted as heat.</span></div>
+    <div class="label">Worked Example: Inhibitor vs. Uncoupler &mdash; A Classic Exam Scenario</div>
+    <p>You measure a cell: oxygen consumption is <strong>HIGH</strong>, but ATP production is <strong>LOW</strong>. What is happening?</p>
+    <div class="step"><span class="sn">1.</span><span>An <strong>ETC inhibitor</strong> (like cyanide) would <em>block</em> electron flow. Electrons cannot reach O&#8322;, so oxygen consumption would <em>drop</em>. That is the opposite of what we see.</span></div>
+    <div class="step"><span class="sn">2.</span><span>An <strong>uncoupler</strong> (like DNP or thermogenin) pokes holes in the inner membrane, letting protons leak back across without going through ATP synthase. The gradient collapses.</span></div>
+    <div class="step"><span class="sn">3.</span><span>The ETC runs <em>faster</em> trying to restore the gradient (more O&#8322; consumed), but ATP synthase has no gradient to use (no ATP made). Energy is wasted as heat.</span></div>
+    <div class="step"><span class="sn">4.</span><span>Answer: <strong>Uncoupler.</strong> O&#8322; up + ATP down = energy dissipated as heat.</span></div>
+    <p>Thermogenin (UCP1) is the body's natural uncoupler in brown adipose tissue. It is how newborns and hibernating animals generate heat.</p>
   </div>
 </div>
 
@@ -423,71 +530,71 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--tex
 <div class="card" id="s7">
   <h2><span class="num">07</span> Fat Metabolism &amp; Ketone Bodies</h2>
 
-  <h3>Beta-Oxidation (Breaking Down Fat)</h3>
-  <p>Fatty acids are broken down 2 carbons at a time in the mitochondrial matrix, producing acetyl-CoA, NADH, and FADH&#8322; each round. A 16-carbon fatty acid (palmitate) goes through 7 rounds and produces 8 acetyl-CoA.</p>
+  <h3>Beta-Oxidation: Breaking Down Fat</h3>
+  <p>Fatty acids are broken down 2 carbons at a time in the mitochondrial matrix. Each round produces one acetyl-CoA, one NADH, and one FADH&#8322;. The acetyl-CoA enters the TCA cycle. A 16-carbon fatty acid (palmitate) undergoes 7 rounds and produces 8 acetyl-CoA.</p>
 
   <div class="formula">
-    <div class="fl">Rounds of Beta-Oxidation</div>
-    <code>Rounds = (carbons / 2) - 1. For palmitate (16C): (16/2) - 1 = 7 rounds.</code>
+    <div class="fl">How Many Rounds of Beta-Oxidation?</div>
+    <code>Rounds = (number of carbons &divide; 2) &minus; 1&nbsp;&nbsp;&nbsp;&nbsp;Palmitate (16C): (16/2) &minus; 1 = 7 rounds</code>
   </div>
 
   <div class="example">
     <div class="label">Worked Example: ATP from Palmitate</div>
-    <div class="step"><span class="sn">1.</span><span>7 rounds produce 7 NADH (= 17.5 ATP) + 7 FADH&#8322; (= 10.5 ATP) = 28 ATP from the rounds.</span></div>
-    <div class="step"><span class="sn">2.</span><span>8 acetyl-CoA enter TCA: each produces 10 ATP (3 NADH + 1 FADH&#8322; + 1 GTP) = 80 ATP.</span></div>
-    <div class="step"><span class="sn">3.</span><span>Subtract 2 ATP for initial activation (fatty acyl-CoA synthetase).</span></div>
-    <div class="step"><span class="sn">4.</span><span>Total: 28 + 80 - 2 = <strong>106 ATP</strong> from one palmitate.</span></div>
-    <p>Compare to ~30-32 from glucose. Fat is a far more efficient energy source per molecule.</p>
+    <div class="step"><span class="sn">1.</span><span>Activation cost: &minus;2 ATP (fatty acyl-CoA synthetase uses ATP &rarr; AMP + 2Pi)</span></div>
+    <div class="step"><span class="sn">2.</span><span>7 rounds of beta-oxidation: 7 NADH (&asymp;17.5 ATP) + 7 FADH&#8322; (&asymp;10.5 ATP) = <strong>28 ATP</strong></span></div>
+    <div class="step"><span class="sn">3.</span><span>8 acetyl-CoA &rarr; TCA: each yields ~10 ATP = <strong>80 ATP</strong></span></div>
+    <div class="step"><span class="sn">4.</span><span>Total: 28 + 80 &minus; 2 = <strong>~106 ATP</strong></span></div>
+    <p>Compare to ~30&ndash;32 ATP from glucose. Fat yields far more ATP per molecule, which is why it is the body's preferred long-term fuel storage form.</p>
   </div>
 
-  <h3>Ketone Bodies</h3>
-  <p>When fat breakdown is high and carbohydrate availability is low (fasting, starvation, uncontrolled diabetes), the liver produces ketone bodies (acetoacetate, beta-hydroxybutyrate, acetone) from excess acetyl-CoA. The brain, which normally uses only glucose, can adapt to use ketone bodies during prolonged fasting.</p>
+  <h3>Ketone Bodies: Fuel When Glucose Is Low</h3>
+  <p>When fat breakdown is high and carbohydrate availability is low (fasting, starvation, uncontrolled diabetes), the liver produces ketone bodies from excess acetyl-CoA. The three ketone bodies are <strong>acetoacetate</strong>, <strong>beta-hydroxybutyrate</strong>, and <strong>acetone</strong>. The brain, which normally uses only glucose, can adapt to use ketone bodies during prolonged fasting.</p>
 
   <div class="pitfall">
     <div class="label">The Liver Makes Ketones But Cannot Use Them</div>
-    The liver lacks thiophorase (succinyl-CoA:acetoacetate CoA transferase), the enzyme needed to convert ketone bodies back to acetyl-CoA. So the liver exports them for other tissues (brain, heart, muscle) to use.
+    The liver lacks <strong>thiophorase</strong> (succinyl-CoA:acetoacetate CoA transferase), the enzyme needed to convert ketone bodies back to acetyl-CoA for the TCA cycle. So the liver exports ketones for the brain, heart, and muscle to use. This is a classic exam question.
   </div>
 
-  <h3>CPT-I: The Gatekeeper</h3>
-  <p>Carnitine palmitoyltransferase I (CPT-I) is the rate-limiting step of beta-oxidation. It moves fatty acids into the mitochondria. It is inhibited by malonyl-CoA (the first committed intermediate of fatty acid synthesis). This makes sense: when you are building fat, you should not simultaneously be burning it.</p>
+  <h3>CPT-I: The Gatekeeper of Beta-Oxidation</h3>
+  <p>Carnitine palmitoyltransferase I (CPT-I) is rate-limiting for beta-oxidation. It transfers fatty acids from the cytoplasm into the mitochondria. It is inhibited by <strong>malonyl-CoA</strong>, the first committed intermediate of fatty acid synthesis. The logic: when you are building fat (high malonyl-CoA), you should not simultaneously be burning it. This is a beautiful example of metabolic logic built into chemistry.</p>
 </div>
 
 <!-- ===== SECTION 8: METABOLIC INTEGRATION ===== -->
 <div class="card" id="s8">
   <h2><span class="num">08</span> Fed vs. Fasted: Metabolic Integration</h2>
 
-  <p>The key to metabolic regulation is understanding two hormones: <strong>insulin</strong> (released when blood glucose is HIGH, after eating) and <strong>glucagon</strong> (released when blood glucose is LOW, during fasting).</p>
+  <p>All of metabolic regulation comes down to two hormones: <strong>insulin</strong> (released when blood glucose is high, after eating) and <strong>glucagon</strong> (released when blood glucose is low, during fasting). Every pathway you have learned is either turned on or off by one of these two signals.</p>
 
   <table class="simple-table">
     <tr><th>State</th><th>Dominant Hormone</th><th>What Happens</th></tr>
-    <tr><td><strong>Fed</strong></td><td>Insulin</td><td>Glucose uptake, glycolysis, glycogenesis, fatty acid synthesis, protein synthesis. Storage mode.</td></tr>
-    <tr><td><strong>Fasting</strong></td><td>Glucagon</td><td>Glycogenolysis, gluconeogenesis, lipolysis, beta-oxidation, ketogenesis. Mobilization mode.</td></tr>
+    <tr><td><strong>Fed</strong></td><td>Insulin</td><td>Glucose uptake, glycolysis, glycogenesis, fatty acid synthesis, protein synthesis. The body is in storage/building mode.</td></tr>
+    <tr><td><strong>Fasting</strong></td><td>Glucagon</td><td>Glycogenolysis, gluconeogenesis, lipolysis, beta-oxidation, ketogenesis. The body is in mobilization mode.</td></tr>
   </table>
 
   <div class="example">
-    <div class="label">Worked Example: What Happens Hour by Hour During Fasting</div>
-    <div class="step"><span class="sn">0-4h:</span><span>Blood glucose maintained by liver glycogen breakdown (glycogenolysis).</span></div>
-    <div class="step"><span class="sn">4-16h:</span><span>Glycogen depleted. Liver switches to gluconeogenesis (making glucose from lactate, amino acids, glycerol).</span></div>
-    <div class="step"><span class="sn">16-48h:</span><span>Fat mobilization increases. Beta-oxidation provides acetyl-CoA. Liver makes ketone bodies.</span></div>
-    <div class="step"><span class="sn">>48h:</span><span>Brain adapts to use ketone bodies, sparing glucose and reducing the need to break down muscle protein for gluconeogenesis.</span></div>
+    <div class="label">Worked Example: What Happens Hour by Hour During a 72-Hour Fast</div>
+    <div class="step"><span class="sn">0&ndash;4h</span><span>Blood glucose maintained by <strong>liver glycogen breakdown</strong> (glycogenolysis). Liver has ~100g glycogen, enough for about 4&ndash;6 hours.</span></div>
+    <div class="step"><span class="sn">4&ndash;16h</span><span>Liver glycogen depletes. Liver switches to <strong>gluconeogenesis</strong>, making new glucose from lactate, amino acids, and glycerol.</span></div>
+    <div class="step"><span class="sn">16&ndash;48h</span><span>Fat mobilization increases. <strong>Beta-oxidation</strong> provides acetyl-CoA. Liver produces <strong>ketone bodies</strong> as excess acetyl-CoA overwhelms TCA capacity.</span></div>
+    <div class="step"><span class="sn">&gt;48h</span><span>Brain adapts to use <strong>ketone bodies</strong>, reducing glucose demand. This spares muscle protein from being broken down for gluconeogenesis. The body is protecting muscle mass.</span></div>
   </div>
 
   <div class="example">
     <div class="label">Worked Example: Why DKA Is Dangerous</div>
-    <p>In Type 1 diabetes, no insulin is produced. Even though blood glucose is HIGH, cells cannot take it up.</p>
-    <div class="step"><span class="sn">1.</span><span>Without insulin, cells think they are starving. Glucagon signals dominate.</span></div>
-    <div class="step"><span class="sn">2.</span><span>Massive lipolysis releases fatty acids. Liver goes into overdrive with beta-oxidation.</span></div>
-    <div class="step"><span class="sn">3.</span><span>Excess acetyl-CoA overwhelms TCA. Liver converts it to ketone bodies.</span></div>
-    <div class="step"><span class="sn">4.</span><span>Ketone bodies are acids. Blood pH drops (ketoacidosis). This is life-threatening.</span></div>
-    <p>Every pathway is behaving logically. The problem is the missing insulin signal that would normally stop all of this.</p>
+    <p>In Type 1 diabetes, no insulin is produced. Blood glucose is very high, but cells cannot take it up without insulin.</p>
+    <div class="step"><span class="sn">1.</span><span>Without insulin, cells behave as if starving even though glucose is abundant. Glucagon signals dominate.</span></div>
+    <div class="step"><span class="sn">2.</span><span>Massive lipolysis releases fatty acids. The liver runs beta-oxidation at maximum rate.</span></div>
+    <div class="step"><span class="sn">3.</span><span>Excess acetyl-CoA overwhelms TCA cycle capacity. The liver converts it to ketone bodies at high rate.</span></div>
+    <div class="step"><span class="sn">4.</span><span>Ketone bodies are acids (pKa ~3.5). Blood pH drops (ketoacidosis). This is life-threatening.</span></div>
+    <p>The key insight: every pathway is behaving <em>correctly</em> given the signal it is receiving. The problem is the missing insulin signal that would normally shut all of this down.</p>
   </div>
 
-  <h3>Organ-Specific Rules</h3>
-  <p><strong>Muscle</strong> lacks glucose-6-phosphatase, so it cannot export free glucose. Muscle glycogen is for muscle use only. <strong>Liver</strong> has glucose-6-phosphatase and can export glucose to maintain blood levels for the whole body. <strong>Brain</strong> normally uses only glucose (fatty acids cannot cross the blood-brain barrier) but adapts to ketone bodies during prolonged fasting. <strong>Red blood cells</strong> have no mitochondria, so they rely entirely on glycolysis (anaerobic, producing lactate).</p>
+  <h3>Organ-Specific Rules You Must Know</h3>
+  <p><strong>Muscle</strong> lacks glucose-6-phosphatase. It cannot export free glucose. Muscle glycogen is for muscle use only. <strong>Liver</strong> has glucose-6-phosphatase and can release free glucose into the blood to maintain levels for all other tissues. <strong>Brain</strong> normally uses only glucose (fatty acids cannot cross the blood-brain barrier) but adapts to ketone bodies during prolonged fasting. <strong>Red blood cells</strong> have no mitochondria and rely entirely on glycolysis, producing lactate as their only byproduct.</p>
 
   <div class="mnemonic">
-    <div class="label">The Cori Cycle</div>
-    Muscle sends lactate to the liver. Liver converts lactate to glucose via gluconeogenesis. Liver sends glucose back to muscle. This cycle costs the liver 6 ATP but provides the muscle with 2 ATP per cycle, a net loss that the liver absorbs to keep muscle running.
+    <div class="label">The Cori Cycle: How Muscle and Liver Cooperate</div>
+    Muscle produces lactate (from anaerobic glycolysis) &rarr; lactate travels to liver &rarr; liver converts lactate to glucose (gluconeogenesis, costs 6 ATP) &rarr; glucose travels back to muscle (used for 2 ATP in glycolysis). Net cost to the liver: 4 ATP per cycle. The liver absorbs this cost so that muscle can keep working.
   </div>
 </div>
 
@@ -531,122 +638,127 @@ function showTab(t){
 // ===== QUIZ DATA =====
 const quizData=[
   {q:"What determines the properties of an amino acid?",opts:["The backbone","The R-group (side chain)","The peptide bond","The amino group"],ans:1,exp:"The R-group (side chain) is the variable part. The backbone is identical for all 20 amino acids."},
-  {q:"An enzyme has Km = 2 mM and Vmax = 100. At [S] = 2 mM, what is the velocity?",opts:["25","50","75","100"],ans:1,exp:"When [S] = Km, velocity = Vmax/2. So v = 100/2 = 50."},
-  {q:"Which inhibitor type increases apparent Km but leaves Vmax unchanged?",opts:["Competitive","Noncompetitive","Uncompetitive","Allosteric"],ans:0,exp:"Competitive inhibitors compete for the active site. Adding more substrate overcomes them, so Vmax is reachable but you need more [S] to get there (apparent Km increases)."},
+  {q:"An enzyme has Km = 2 mM and Vmax = 100. At [S] = 2 mM, what is the velocity?",opts:["25","50","75","100"],ans:1,exp:"When [S] = Km, velocity = Vmax/2. So v = 100/2 = 50. This is the definition of Km."},
+  {q:"Which inhibitor type increases apparent Km but leaves Vmax unchanged?",opts:["Competitive","Noncompetitive","Uncompetitive","Allosteric (mixed)"],ans:0,exp:"Competitive inhibitors compete for the active site. Adding more substrate outcompetes the inhibitor, so Vmax is reachable. But you need more substrate to reach half-Vmax, so apparent Km increases."},
+  {q:"A noncompetitive inhibitor is added. What happens to Km and Vmax?",opts:["Km up, Vmax unchanged","Km unchanged, Vmax down","Km down, Vmax down","Km up, Vmax down"],ans:1,exp:"Noncompetitive inhibitors bind an allosteric site. Substrate still binds normally (Km unchanged), but catalysis is impaired regardless of how much substrate is present (Vmax decreases)."},
+  {q:"An uncompetitive inhibitor is added. What is the expected result?",opts:["Km up, Vmax unchanged","Km unchanged, Vmax down","Both Km and Vmax decrease","Km up, Vmax up"],ans:2,exp:"Uncompetitive inhibitors only bind the enzyme-substrate complex. This stabilizes it (apparent Km decreases), but prevents product formation (Vmax decreases). Both fall proportionally."},
   {q:"Why is sucrose a non-reducing sugar?",opts:["It contains fructose","Both anomeric carbons are locked in the glycosidic bond","It is a disaccharide","It dissolves in water"],ans:1,exp:"A reducing sugar needs a free anomeric carbon. In sucrose, both anomeric carbons (C1 of glucose, C2 of fructose) participate in the bond, so neither is free."},
-  {q:"Which complex of the ETC does NOT pump protons?",opts:["Complex I","Complex II","Complex III","Complex IV"],ans:1,exp:"Complex II (succinate dehydrogenase) passes electrons to CoQ but does not pump H+. This is why FADH2 yields less ATP than NADH."},
-  {q:"The rate-limiting enzyme of glycolysis is:",opts:["Hexokinase","Glucokinase","PFK-1","Pyruvate kinase"],ans:2,exp:"PFK-1 catalyzes the committed step of glycolysis (F6P to F-1,6-BP). It is activated by AMP and F-2,6-BP, inhibited by ATP and citrate."},
-  {q:"Why is lactate produced during anaerobic conditions?",opts:["To generate ATP directly","To regenerate NAD+ so glycolysis can continue","To feed the TCA cycle","To lower blood pH"],ans:1,exp:"Glycolysis needs NAD+ at step 6. Without oxygen, the ETC cannot regenerate NAD+ from NADH. Lactate dehydrogenase converts pyruvate to lactate, recycling NADH back to NAD+."},
+  {q:"Which complex of the ETC does NOT pump protons?",opts:["Complex I","Complex II","Complex III","Complex IV"],ans:1,exp:"Complex II (succinate dehydrogenase) passes electrons to CoQ but does not pump H+. This is why FADH2 yields less ATP (~1.5) than NADH (~2.5)."},
+  {q:"The rate-limiting enzyme of glycolysis is:",opts:["Hexokinase","Glucokinase","PFK-1","Pyruvate kinase"],ans:2,exp:"PFK-1 catalyzes the committed step of glycolysis (F6P to F-1,6-BP). It is activated by AMP and F-2,6-BP and inhibited by ATP and citrate."},
+  {q:"Why is lactate produced during anaerobic conditions?",opts:["To generate ATP directly","To regenerate NAD+ so glycolysis can continue","To feed the TCA cycle","To lower blood pH"],ans:1,exp:"Glycolysis needs NAD+ at step 6. Without oxygen, the ETC cannot regenerate NAD+ from NADH. LDH converts pyruvate to lactate, recycling NADH back to NAD+ so glycolysis can keep running."},
   {q:"How many rounds of beta-oxidation does a 16-carbon fatty acid undergo?",opts:["6","7","8","16"],ans:1,exp:"Rounds = (carbons / 2) - 1. For 16C: (16/2) - 1 = 7 rounds, producing 8 acetyl-CoA."},
-  {q:"The liver cannot use ketone bodies because it lacks:",opts:["CPT-I","Thiophorase","Hexokinase","Acetyl-CoA carboxylase"],ans:1,exp:"Thiophorase (succinyl-CoA:acetoacetate CoA transferase) converts ketone bodies back to acetyl-CoA. The liver produces ketones but cannot use them."},
-  {q:"Insulin promotes all of the following EXCEPT:",opts:["Glycolysis","Gluconeogenesis","Fatty acid synthesis","Glycogenesis"],ans:1,exp:"Insulin is the fed-state hormone. It promotes storage (glycolysis, glycogenesis, FA synthesis). Gluconeogenesis is a fasting pathway promoted by glucagon."},
-  {q:"Why can muscle NOT export glucose to the blood?",opts:["Muscle has no GLUT4","Muscle lacks glucose-6-phosphatase","Muscle has no glycogen","Muscle uses only fatty acids"],ans:1,exp:"Without glucose-6-phosphatase, muscle cannot convert G6P back to free glucose. So muscle glycogen is for muscle use only."},
-  {q:"Which organ relies entirely on glycolysis for ATP?",opts:["Brain","Liver","Red blood cells","Heart"],ans:2,exp:"Red blood cells have no mitochondria. They can only do glycolysis (anaerobic), producing lactate."},
-  {q:"Oxygen consumption is HIGH but ATP production is LOW. The cause is most likely:",opts:["An ETC inhibitor","An uncoupler","A competitive inhibitor of ATP synthase","Substrate-level phosphorylation"],ans:1,exp:"An uncoupler collapses the proton gradient. The ETC runs faster (more O2 consumed) trying to restore it, but ATP synthase has no gradient to use. Energy is wasted as heat."},
-  {q:"Cyanide poisoning is lethal because it inhibits:",opts:["Complex I","Complex II","Complex III","Complex IV"],ans:3,exp:"Cyanide blocks Complex IV, preventing electrons from reaching oxygen. The entire ETC backs up and stops."},
-  {q:"In the Cori cycle, muscle sends _____ to the liver, and the liver sends _____ back.",opts:["Glucose; lactate","Lactate; glucose","Pyruvate; acetyl-CoA","Alanine; glutamate"],ans:1,exp:"Muscle produces lactate (anaerobic glycolysis). Liver converts it to glucose (gluconeogenesis) and exports it. Net cost: 4 ATP to the liver per cycle."},
-  {q:"The pI of an acidic amino acid is calculated by averaging:",opts:["The two highest pKa values","The two lowest pKa values","All three pKa values","pKa1 and pKa2 only"],ans:1,exp:"For acidic amino acids (Asp, Glu), the zwitterion form is bracketed by the two lowest pKa values (backbone carboxyl and side chain carboxyl)."},
+  {q:"The liver cannot use ketone bodies because it lacks:",opts:["CPT-I","Thiophorase","Hexokinase","Acetyl-CoA carboxylase"],ans:1,exp:"Thiophorase (succinyl-CoA:acetoacetate CoA transferase) converts ketone bodies back to acetyl-CoA. The liver makes ketones but cannot use them, so it exports them."},
+  {q:"Insulin promotes all of the following EXCEPT:",opts:["Glycolysis","Gluconeogenesis","Fatty acid synthesis","Glycogenesis"],ans:1,exp:"Insulin is the fed-state hormone that promotes storage: glycolysis, glycogenesis, and FA synthesis. Gluconeogenesis is a fasting pathway driven by glucagon."},
+  {q:"Why can muscle NOT export glucose to the blood?",opts:["Muscle has no GLUT4","Muscle lacks glucose-6-phosphatase","Muscle has no glycogen","Muscle uses only fatty acids"],ans:1,exp:"Without glucose-6-phosphatase, muscle cannot convert G6P to free glucose. Muscle glycogen is for muscle use only."},
+  {q:"Which organ relies entirely on glycolysis for ATP?",opts:["Brain","Liver","Red blood cells","Heart"],ans:2,exp:"Red blood cells have no mitochondria. They rely on anaerobic glycolysis and produce lactate."},
+  {q:"Oxygen consumption is HIGH but ATP production is LOW. The most likely cause is:",opts:["An ETC inhibitor","An uncoupler","Competitive inhibitor of ATP synthase","Substrate limitation"],ans:1,exp:"An uncoupler collapses the proton gradient. The ETC runs faster (more O2 consumed) trying to restore it, but ATP synthase has no gradient to drive it. Energy is wasted as heat."},
+  {q:"Cyanide poisoning is lethal because it inhibits:",opts:["Complex I","Complex II","Complex III","Complex IV"],ans:3,exp:"Cyanide blocks Complex IV, preventing electrons from reaching O2. The entire ETC backs up and stops. No O2 is consumed, no ATP is made."},
+  {q:"In the Cori cycle, muscle sends _____ to the liver, and the liver sends _____ back.",opts:["Glucose; lactate","Lactate; glucose","Pyruvate; acetyl-CoA","Alanine; glutamate"],ans:1,exp:"Muscle produces lactate via anaerobic glycolysis. Liver converts it to glucose (gluconeogenesis) and exports glucose back to muscle."},
+  {q:"The pI of an acidic amino acid is calculated by averaging:",opts:["The two highest pKa values","The two lowest pKa values","All three pKa values","pKa1 and pKa2 only"],ans:1,exp:"For acidic amino acids (Asp, Glu), the zwitterion form is bracketed by the two lowest pKa values: backbone carboxyl and side chain carboxyl."},
   {q:"What is the main driving force for tertiary protein structure?",opts:["Hydrogen bonds","Ionic bonds","Hydrophobic interactions","Disulfide bonds"],ans:2,exp:"Nonpolar side chains are buried inside the protein, away from water. This hydrophobic effect is the dominant force shaping the 3D fold."},
-  {q:"How does cholesterol affect membrane fluidity?",opts:["Always increases it","Always decreases it","Acts as a fluidity buffer","Has no effect"],ans:2,exp:"Cholesterol restricts movement at high temperatures (decreases fluidity) and prevents tight packing at low temperatures (increases fluidity). It buffers fluidity."},
-  {q:"The PDH complex requires which coenzymes?",opts:["NAD+, FAD, CoA only","TPP, Lipoic acid, CoA, FAD, NAD+","Biotin, CoA, NAD+","PLP, FAD, NAD+"],ans:1,exp:"Tender Loving Care For Nancy = TPP, Lipoic acid, CoA, FAD, NAD+."},
-  {q:"One turn of the TCA cycle produces:",opts:["3 NADH, 1 FADH2, 1 GTP","2 NADH, 2 FADH2, 1 ATP","4 NADH, 1 FADH2, 1 GTP","3 NADH, 1 FADH2, 1 ATP"],ans:0,exp:"Each turn: 3 NADH + 1 FADH2 + 1 GTP + 2 CO2."},
-  {q:"CPT-I is inhibited by malonyl-CoA. Why does this make sense?",opts:["Malonyl-CoA is toxic","Malonyl-CoA is the first step of fatty acid synthesis, so you should not burn fat while making it","Malonyl-CoA competes with carnitine","CPT-I is only active during exercise"],ans:1,exp:"Malonyl-CoA signals that the cell is in building mode (fed state, making fat). Inhibiting CPT-I prevents fatty acids from entering the mitochondria for oxidation. You do not simultaneously build and burn fat."},
-  {q:"Starch and cellulose differ in:",opts:["Monomer type","Glycosidic bond orientation","Number of carbons per monomer","Branching only"],ans:1,exp:"Both are glucose polymers. Starch has alpha-1,4 bonds (digestible). Cellulose has beta-1,4 bonds (indigestible by humans)."},
-  {q:"What is the approximate total ATP yield from one glucose molecule (aerobic)?",opts:["2","12","30-32","106"],ans:2,exp:"Glycolysis (2 ATP + 2 NADH) + PDH (2 NADH) + TCA (6 NADH + 2 FADH2 + 2 GTP) = approximately 30-32 ATP total."},
-  {q:"During prolonged fasting, the brain adapts to use:",opts:["Fatty acids","Ketone bodies","Amino acids only","Lactate"],ans:1,exp:"Fatty acids cannot cross the blood-brain barrier. Ketone bodies can, and the brain upregulates enzymes to use them, sparing glucose and reducing muscle protein breakdown."},
-  {q:"Sickle cell disease is caused by a change at which level of protein structure?",opts:["Primary (Glu to Val)","Secondary","Tertiary","Quaternary"],ans:0,exp:"The mutation is a single amino acid change (primary structure): Glu to Val at position 6 of beta-globin. This primary change cascades to affect quaternary structure (aggregation)."},
-  {q:"Allosteric enzymes show what kind of kinetics curve?",opts:["Hyperbolic","Sigmoidal (S-shaped)","Linear","Exponential"],ans:1,exp:"Allosteric enzymes show cooperative binding, producing a sigmoidal curve. Michaelis-Menten enzymes show a hyperbolic curve."},
-  {q:"Fat provides more energy per gram than carbohydrate because:",opts:["Fat has more nitrogen","Fatty acids are more reduced (more C-H bonds to oxidize)","Fat dissolves in water","Fatty acids are shorter"],ans:1,exp:"More C-H bonds means more electrons to donate to the ETC, yielding more ATP per gram. Fat also stores anhydrously (no water weight)."},
-  {q:"Glucokinase differs from hexokinase in that glucokinase:",opts:["Is found in all cells","Has a low Km","Has a high Km, is not inhibited by G6P, and is induced by insulin","Uses fructose as a substrate"],ans:2,exp:"Glucokinase (liver) has a high Km, so it only works when glucose is abundant (after a meal). It is not inhibited by G6P and is upregulated by insulin."},
-  {q:"In DKA, the underlying problem is:",opts:["Too much insulin","Absence of insulin signaling, causing cells to behave as if starving despite high blood glucose","Excessive glucokinase activity","Blocked beta-oxidation"],ans:1,exp:"Without insulin, cells cannot take up glucose. The body enters a fasting-like state: lipolysis, beta-oxidation, and ketogenesis go into overdrive, producing ketoacids."},
-  {q:"The Cori cycle costs the liver how many ATP equivalents per cycle?",opts:["0","2","4","6"],ans:2,exp:"Gluconeogenesis (lactate to glucose) costs 6 ATP. Glycolysis (glucose to lactate in muscle) produces 2 ATP. Net cost to the liver: 4 ATP per cycle."}
+  {q:"How does cholesterol affect membrane fluidity?",opts:["Always increases it","Always decreases it","Acts as a fluidity buffer","Has no effect below 37 degrees C"],ans:2,exp:"Cholesterol restricts movement at high temperatures (decreasing fluidity) and prevents tight packing at low temperatures (increasing fluidity). It buffers fluidity at both extremes."},
+  {q:"The PDH complex requires which set of coenzymes?",opts:["NAD+, FAD, CoA only","TPP, Lipoic acid, CoA, FAD, NAD+","Biotin, CoA, NAD+","PLP, FAD, NAD+"],ans:1,exp:"Tender Loving Care For Nancy = TPP, Lipoic acid, CoA, FAD, NAD+. All five are required for PDH."},
+  {q:"One turn of the TCA cycle produces:",opts:["3 NADH, 1 FADH2, 1 GTP","2 NADH, 2 FADH2, 1 ATP","4 NADH, 1 FADH2, 1 GTP","3 NADH, 1 FADH2, 1 ATP"],ans:0,exp:"Each turn: 3 NADH + 1 FADH2 + 1 GTP + 2 CO2 released."},
+  {q:"CPT-I is inhibited by malonyl-CoA. Why does this make physiological sense?",opts:["Malonyl-CoA is toxic to mitochondria","Malonyl-CoA signals fatty acid synthesis is active, so fat should not be burned simultaneously","Malonyl-CoA competes with carnitine","CPT-I is only active during fasting"],ans:1,exp:"Malonyl-CoA is the first committed intermediate of fatty acid synthesis. Its presence signals that the cell is building fat. Inhibiting CPT-I prevents simultaneous fat burning. You don't build and burn at the same time."},
+  {q:"Starch and cellulose differ only in:",opts:["Monomer type","Glycosidic bond orientation","Number of carbons per monomer","Degree of branching only"],ans:1,exp:"Both are glucose polymers. Starch has alpha-1,4 bonds (digestible by humans). Cellulose has beta-1,4 bonds (indigestible). One bond orientation is the difference."},
+  {q:"Approximate total ATP yield from one glucose molecule (aerobic)?",opts:["2","12","30-32","106"],ans:2,exp:"Glycolysis (7 ATP) + PDH (5 ATP) + TCA (20 ATP) = ~30-32 ATP total. The old value of 36-38 is outdated."},
+  {q:"During prolonged fasting, the brain adapts to use:",opts:["Fatty acids","Ketone bodies","Amino acids primarily","Lactate from muscle"],ans:1,exp:"Fatty acids cannot cross the blood-brain barrier. Ketone bodies can. During extended fasting, the brain upregulates enzymes to use ketone bodies, reducing glucose demand and sparing muscle protein."},
+  {q:"Sickle cell disease involves a change at which level of protein structure?",opts:["Primary (Glu to Val)","Secondary","Tertiary","Quaternary"],ans:0,exp:"The mutation is a single amino acid change in primary structure: Glu to Val at position 6 of beta-globin. This primary change causes a quaternary-level aggregation problem."},
+  {q:"Allosteric enzymes show what type of kinetics curve?",opts:["Hyperbolic","Sigmoidal (S-shaped)","Linear","Exponential"],ans:1,exp:"Allosteric enzymes show cooperative binding, producing a sigmoidal (S-shaped) curve. Standard Michaelis-Menten enzymes show a hyperbolic curve."},
+  {q:"Fat provides more energy per gram than carbohydrate because:",opts:["Fat has more nitrogen","Fatty acids are more reduced, with more C-H bonds to oxidize","Fat dissolves in water and is easily mobilized","Fatty acids are shorter chains"],ans:1,exp:"More C-H bonds means more electrons to donate to the ETC, yielding more ATP. Fat also stores anhydrously (no water), unlike glycogen which binds water."},
+  {q:"Glucokinase differs from hexokinase in that glucokinase:",opts:["Is found in all cells","Has a low Km for glucose","Has a high Km, is not inhibited by G6P, and is induced by insulin","Uses fructose as its primary substrate"],ans:2,exp:"Glucokinase (liver enzyme) has a high Km, so it only works when glucose is abundant after a meal. It is not inhibited by G6P and is upregulated by insulin. Hexokinase is found in all cells, has low Km, and is inhibited by G6P."},
+  {q:"In DKA, the underlying metabolic problem is:",opts:["Too much insulin causing hypoglycemia","Absence of insulin signaling causing cells to behave as if starving despite high blood glucose","Excessive glucokinase activity","Blocked beta-oxidation"],ans:1,exp:"Without insulin, cells cannot take up glucose. The body enters a fasting-like state: lipolysis, beta-oxidation, and ketogenesis all run at high rates. Ketone acids accumulate and drop blood pH dangerously."},
+  {q:"The Cori cycle costs the liver approximately how many ATP per cycle?",opts:["0","2","4","6"],ans:2,exp:"Gluconeogenesis (lactate to glucose) costs 6 ATP. Glycolysis in muscle (glucose to lactate) produces 2 ATP. Net cost to the liver: 4 ATP per cycle. The liver subsidizes muscle energy."}
 ];
 
 // ===== FLASHCARD DATA =====
 const fcData=[
-  {f:"What makes each amino acid unique?",b:"The R-group (side chain). The backbone is the same for all 20.",c:"Amino Acids"},
-  {f:"What does 'low Km' mean?",b:"High affinity. The enzyme grabs its substrate tightly and reaches half-Vmax at a low substrate concentration.",c:"Enzymes"},
-  {f:"What does an enzyme do to activation energy?",b:"Lowers it. The enzyme does not change the equilibrium or delta-G, just makes the reaction faster.",c:"Enzymes"},
-  {f:"Competitive inhibitor: effect on Km? Vmax?",b:"Km increases (apparent), Vmax unchanged. Can be overcome by adding more substrate.",c:"Enzymes"},
-  {f:"Noncompetitive inhibitor: effect on Km? Vmax?",b:"Km unchanged, Vmax decreases. Cannot be overcome by more substrate.",c:"Enzymes"},
-  {f:"What is the rate-limiting enzyme of glycolysis?",b:"PFK-1. Activated by AMP and F-2,6-BP. Inhibited by ATP and citrate.",c:"Glycolysis"},
-  {f:"Net ATP from glycolysis per glucose?",b:"2 ATP (and 2 NADH).",c:"Glycolysis"},
-  {f:"Why is lactate made under anaerobic conditions?",b:"To regenerate NAD+ so glycolysis can keep running.",c:"Glycolysis"},
+  {f:"What makes each amino acid unique?",b:"The R-group (side chain). The backbone (amino, carboxyl, alpha-carbon) is identical for all 20.",c:"Amino Acids"},
+  {f:"What does 'low Km' mean?",b:"High affinity. The enzyme reaches half-Vmax at a low [S], meaning it binds substrate tightly.",c:"Enzymes"},
+  {f:"What does an enzyme do to activation energy?",b:"Lowers it. The enzyme does not change equilibrium or delta-G, just makes the reaction faster.",c:"Enzymes"},
+  {f:"Competitive inhibitor: Km? Vmax?",b:"Km INCREASES (apparent). Vmax UNCHANGED. Can be overcome by adding more substrate.",c:"Enzymes"},
+  {f:"Noncompetitive inhibitor: Km? Vmax?",b:"Km UNCHANGED. Vmax DECREASES. Binds allosteric site, not active site. Cannot be overcome by more substrate.",c:"Enzymes"},
+  {f:"Uncompetitive inhibitor: Km? Vmax?",b:"Both Km and Vmax DECREASE proportionally. Only binds the enzyme-substrate complex. Most counterintuitive type.",c:"Enzymes"},
+  {f:"How to tell competitive from noncompetitive from data?",b:"Step 1: Is Vmax unchanged? Yes = Competitive. Step 2: Did Vmax drop? Check Km. Km unchanged = Noncompetitive. Km dropped = Uncompetitive.",c:"Enzymes"},
+  {f:"Why does uncompetitive inhibition decrease Km?",b:"The inhibitor stabilizes the ES complex, preventing substrate from leaving. This makes substrate binding appear tighter (lower apparent Km), but the complex cannot complete the reaction.",c:"Enzymes"},
+  {f:"What is the rate-limiting enzyme of glycolysis?",b:"PFK-1. Catalyzes the committed step. Activated by AMP and F-2,6-BP. Inhibited by ATP and citrate.",c:"Glycolysis"},
+  {f:"Net ATP from glycolysis per glucose?",b:"2 ATP net (invest 2, produce 4). Plus 2 NADH.",c:"Glycolysis"},
+  {f:"Why is lactate made under anaerobic conditions?",b:"To regenerate NAD+ so glycolysis can continue. LDH converts pyruvate to lactate, recycling NADH to NAD+.",c:"Glycolysis"},
   {f:"PDH coenzymes mnemonic?",b:"Tender Loving Care For Nancy = TPP, Lipoic acid, CoA, FAD, NAD+.",c:"Glycolysis"},
-  {f:"What is the main JOB of the TCA cycle?",b:"To harvest electrons as NADH and FADH2 for the ETC. It produces very little ATP directly.",c:"TCA Cycle"},
-  {f:"Products per TCA turn?",b:"3 NADH, 1 FADH2, 1 GTP, 2 CO2.",c:"TCA Cycle"},
-  {f:"TCA intermediates in order?",b:"Citrate, Isocitrate, alpha-KG, Succinyl-CoA, Succinate, Fumarate, Malate, OAA. 'Can I Keep Selling Succinyl For Malate, Officer?'",c:"TCA Cycle"},
-  {f:"Which ETC complex does NOT pump H+?",b:"Complex II. This is why FADH2 yields less ATP (~1.5) than NADH (~2.5).",c:"ETC/ATP"},
-  {f:"What does cyanide inhibit?",b:"Complex IV. Blocks the final transfer of electrons to O2. Lethal.",c:"ETC/ATP"},
-  {f:"Inhibitor vs. uncoupler?",b:"Inhibitor blocks electron flow (everything stops). Uncoupler lets electrons flow but wastes the gradient as heat (no ATP made).",c:"ETC/ATP"},
-  {f:"Total ATP per glucose (aerobic)?",b:"Approximately 30-32 ATP.",c:"ETC/ATP"},
-  {f:"What is CPT-I and why is it important?",b:"Carnitine palmitoyltransferase I. Rate-limiting step of beta-oxidation. Inhibited by malonyl-CoA (prevents burning fat while making fat).",c:"Fat Metabolism"},
-  {f:"Why can the liver not use ketone bodies?",b:"It lacks thiophorase, the enzyme to convert them back to acetyl-CoA.",c:"Fat Metabolism"},
-  {f:"Where does fatty acid synthesis happen?",b:"Cytoplasm. Beta-oxidation happens in the mitochondrial matrix. They are compartmentally separated.",c:"Fat Metabolism"},
-  {f:"Rate-limiting enzyme of FA synthesis?",b:"Acetyl-CoA carboxylase (ACC). Makes malonyl-CoA. Activated by insulin and citrate.",c:"Fat Metabolism"},
-  {f:"What does insulin promote?",b:"Storage and building: glucose uptake, glycolysis, glycogenesis, FA synthesis, protein synthesis. Inhibits gluconeogenesis.",c:"Regulation"},
-  {f:"What does glucagon promote?",b:"Mobilization: glycogenolysis, gluconeogenesis, lipolysis, beta-oxidation, ketogenesis.",c:"Regulation"},
-  {f:"Why can the brain not use fatty acids?",b:"Fatty acids do not cross the blood-brain barrier. Brain uses glucose primarily, ketone bodies during fasting.",c:"Regulation"},
-  {f:"Why can muscle not export glucose?",b:"Muscle lacks glucose-6-phosphatase. It cannot convert G6P to free glucose.",c:"Regulation"},
-  {f:"What is the Cori cycle?",b:"Muscle sends lactate to liver. Liver converts it to glucose via gluconeogenesis and sends glucose back to muscle.",c:"Regulation"},
+  {f:"What is the real purpose of the TCA cycle?",b:"To strip electrons from carbons and load them onto NADH and FADH2 for the ETC. It produces very little ATP directly (only GTP).",c:"TCA Cycle"},
+  {f:"Products per TCA turn?",b:"3 NADH, 1 FADH2, 1 GTP, 2 CO2 released.",c:"TCA Cycle"},
+  {f:"TCA intermediates in order?",b:"Citrate, Isocitrate, alpha-KG, Succinyl-CoA, Succinate, Fumarate, Malate, OAA. ('Can I Keep Selling Succinyl For Malate, Officer?')",c:"TCA Cycle"},
+  {f:"Which ETC complex does NOT pump H+?",b:"Complex II. This is why FADH2 yields ~1.5 ATP vs NADH ~2.5 ATP.",c:"ETC/ATP"},
+  {f:"What does cyanide inhibit?",b:"Complex IV. Blocks final transfer of electrons to O2. Entire ETC backs up. Lethal.",c:"ETC/ATP"},
+  {f:"ETC inhibitor vs. uncoupler: what is the difference?",b:"Inhibitor blocks electron flow: O2 consumption AND ATP both DROP. Uncoupler collapses the gradient: O2 consumption RISES, ATP DROPS. Energy wasted as heat.",c:"ETC/ATP"},
+  {f:"Total ATP per glucose (aerobic)?",b:"~30-32 ATP. (Not the old 36-38 value.)",c:"ETC/ATP"},
+  {f:"What is CPT-I and why is it important?",b:"Carnitine palmitoyltransferase I. Rate-limiting for beta-oxidation. Inhibited by malonyl-CoA when fatty acid synthesis is active.",c:"Fat Metabolism"},
+  {f:"Why can the liver not use ketone bodies?",b:"It lacks thiophorase (the enzyme to reactivate ketone bodies back to acetyl-CoA). The liver makes them; other tissues use them.",c:"Fat Metabolism"},
+  {f:"Where does fatty acid synthesis happen vs. beta-oxidation?",b:"Synthesis: cytoplasm. Beta-oxidation: mitochondrial matrix. Compartmentally separated by design.",c:"Fat Metabolism"},
+  {f:"Rate-limiting enzyme of fatty acid synthesis?",b:"Acetyl-CoA carboxylase (ACC). Makes malonyl-CoA. Activated by insulin and citrate. Inhibited by glucagon.",c:"Fat Metabolism"},
+  {f:"What does insulin promote?",b:"Glucose uptake, glycolysis, glycogenesis, FA synthesis, protein synthesis. All storage/building. Inhibits gluconeogenesis.",c:"Regulation"},
+  {f:"What does glucagon promote?",b:"Glycogenolysis, gluconeogenesis, lipolysis, beta-oxidation, ketogenesis. All mobilization.",c:"Regulation"},
+  {f:"Why can the brain not use fatty acids?",b:"Fatty acids cannot cross the blood-brain barrier. Brain uses glucose normally, then adapts to ketone bodies during prolonged fasting.",c:"Regulation"},
+  {f:"Why can muscle not export glucose?",b:"Muscle lacks glucose-6-phosphatase. Cannot convert G6P to free glucose. Glycogen is for muscle only.",c:"Regulation"},
+  {f:"What is the Cori cycle?",b:"Muscle sends lactate to liver. Liver converts it to glucose (gluconeogenesis, costs 6 ATP). Liver sends glucose back. Net cost to liver: 4 ATP per cycle.",c:"Regulation"},
   {f:"Only purely ketogenic amino acids?",b:"Leucine and Lysine. They produce only acetyl-CoA, which cannot make glucose.",c:"Amino Acids"},
-  {f:"Starch vs. cellulose: same sugar, different linkage.",b:"Both are glucose polymers. Starch = alpha-1,4 (we can digest). Cellulose = beta-1,4 (we cannot digest).",c:"Carbs"},
-  {f:"What is a reducing sugar?",b:"A sugar with a free anomeric carbon that can open and donate electrons. Sucrose is non-reducing; lactose and maltose are reducing.",c:"Carbs"},
-  {f:"Saturated vs. unsaturated fat?",b:"Saturated = no double bonds, straight, packs tightly, solid. Unsaturated = double bonds create kinks, liquid at room temp.",c:"Lipids"},
-  {f:"How does cholesterol affect membranes?",b:"It is a fluidity buffer: reduces fluidity at high temp, increases it at low temp.",c:"Lipids"},
-  {f:"Essential amino acids mnemonic?",b:"PVT TIM HALL: Phe, Val, Thr, Trp, Ile, Met, His, Arg, Leu, Lys.",c:"Amino Acids"},
-  {f:"What holds secondary structure together?",b:"Hydrogen bonds between backbone NH and C=O groups.",c:"Proteins"},
-  {f:"What is the main force in tertiary structure?",b:"Hydrophobic interactions (nonpolar side chains buried inside, away from water).",c:"Proteins"},
-  {f:"Proline is a 'helix breaker.' Why?",b:"Its cyclic side chain connects back to the backbone, making it rigid and unable to fit in an alpha-helix.",c:"Proteins"},
-  {f:"How many kcal per gram does fat provide?",b:"9 kcal/g (compared to 4 kcal/g for carbs and protein).",c:"Lipids"},
-  {f:"Allosteric enzymes show what kind of curve?",b:"Sigmoidal (S-shaped), not hyperbolic like Michaelis-Menten enzymes.",c:"Enzymes"},
-  {f:"Glucokinase vs. hexokinase?",b:"Glucokinase (liver): high Km, not inhibited by G6P, induced by insulin. Hexokinase (most cells): low Km, inhibited by G6P.",c:"Glycolysis"},
-  {f:"Irreversible steps of glycolysis?",b:"Steps 1 (hexokinase), 3 (PFK-1), 10 (pyruvate kinase). PFK-1 is the committed and rate-limiting step.",c:"Glycolysis"},
-  {f:"What is substrate-level phosphorylation?",b:"Direct transfer of a phosphate group from a substrate to ADP, making ATP. Happens in glycolysis and TCA (not via the ETC gradient).",c:"Glycolysis"},
-  {f:"What is the P/O ratio for NADH vs FADH2?",b:"NADH yields ~2.5 ATP. FADH2 yields ~1.5 ATP. FADH2 enters at Complex II, skipping the proton pump at Complex I.",c:"ETC/ATP"},
-  {f:"What happens metabolically at hour 4 of fasting?",b:"Liver glycogen is being depleted. Gluconeogenesis begins ramping up.",c:"Regulation"},
-  {f:"What happens after 48+ hours of fasting?",b:"Brain adapts to ketone bodies. Muscle protein breakdown slows. Fat becomes the primary fuel.",c:"Regulation"},
-  {f:"Explain DKA in one sentence.",b:"No insulin means cells cannot take up glucose, so the body mobilizes fat excessively, producing so many ketone acids that blood pH drops dangerously.",c:"Regulation"},
-  {f:"What is the pentose phosphate pathway for?",b:"Two things: NADPH (for biosynthesis and antioxidant defense) and ribose-5-phosphate (for nucleotide synthesis).",c:"Other Pathways"},
-  {f:"G6PD deficiency causes what?",b:"Reduced NADPH production, making red blood cells vulnerable to oxidative stress. Causes hemolytic anemia when exposed to oxidative triggers.",c:"Other Pathways"},
-  {f:"How many ATP for palmitate activation?",b:"2 ATP equivalents (ATP to AMP + 2Pi). Always subtract this from the total beta-oxidation yield.",c:"Fat Metabolism"},
-  {f:"Rounds of beta-oxidation for a 16C fatty acid?",b:"(16/2) - 1 = 7 rounds, producing 8 acetyl-CoA.",c:"Fat Metabolism"},
-  {f:"What is the fed-state fate of acetyl-CoA in the liver?",b:"Used for fatty acid synthesis (lipogenesis). Citrate is exported from mitochondria and cleaved back to acetyl-CoA in the cytoplasm.",c:"Regulation"},
-  {f:"How do RBCs produce ATP?",b:"Glycolysis only. No mitochondria, so no TCA or oxidative phosphorylation. They produce lactate.",c:"Regulation"},
-  {f:"Sickle cell: primary structure change?",b:"Glu (charged, hydrophilic) to Val (nonpolar, hydrophobic) at position 6 of beta-globin. Creates a sticky hydrophobic patch that causes aggregation under low O2.",c:"Proteins"},
-  {f:"What does F-2,6-bisphosphate do?",b:"Most potent activator of PFK-1 (glycolysis). Made by PFK-2. Insulin activates PFK-2; glucagon inhibits it.",c:"Glycolysis"},
-  {f:"Glycogen branches every ___ residues.",b:"8-12 residues. Branch points are alpha-1,6 linkages. This allows rapid glucose mobilization from multiple ends simultaneously.",c:"Carbs"},
-  {f:"Name the gluconeogenesis bypass enzymes.",b:"Pyruvate carboxylase (pyruvate to OAA), PEPCK (OAA to PEP), F-1,6-bisphosphatase (F-1,6-BP to F6P), G-6-phosphatase (G6P to glucose).",c:"Glycolysis"},
-  {f:"Biotin is a cofactor for which type of reaction?",b:"Carboxylation reactions (adding CO2). Key enzymes: pyruvate carboxylase, acetyl-CoA carboxylase, propionyl-CoA carboxylase.",c:"Enzymes"},
-  {f:"How does the malate-aspartate shuttle work?",b:"Transfers NADH equivalents from cytoplasm to mitochondria. Cytoplasmic NADH reduces OAA to malate, malate enters mitochondria, is re-oxidized to OAA producing mitochondrial NADH. Yields 2.5 ATP per NADH.",c:"ETC/ATP"}
+  {f:"Starch vs. cellulose: what is the only difference?",b:"Both are glucose polymers. Starch = alpha-1,4 bonds (digestible). Cellulose = beta-1,4 bonds (indigestible). One bond orientation, completely different function.",c:"Carbs"},
+  {f:"What is a reducing sugar?",b:"A sugar with a free anomeric carbon that can open and donate electrons. Sucrose is non-reducing (both anomeric carbons locked). Lactose and maltose are reducing.",c:"Carbs"},
+  {f:"Saturated vs. unsaturated fatty acid?",b:"Saturated = no double bonds, straight chains, pack tightly, solid. Unsaturated = double bonds create kinks, cannot pack, liquid at room temp.",c:"Lipids"},
+  {f:"How does cholesterol affect membranes?",b:"Fluidity buffer: restricts movement at high temps (decreases fluidity), prevents tight packing at low temps (increases fluidity).",c:"Lipids"},
+  {f:"Essential amino acids mnemonic?",b:"PVT TIM HALL: Phe, Val, Thr, Trp, Ile, Met, His, Arg (conditional), Leu, Lys.",c:"Amino Acids"},
+  {f:"What holds secondary structure (alpha-helix and beta-sheet) together?",b:"Hydrogen bonds between backbone NH and C=O groups (not between side chains).",c:"Proteins"},
+  {f:"What is the main force in tertiary structure?",b:"Hydrophobic interactions: nonpolar side chains buried inside, away from water.",c:"Proteins"},
+  {f:"Proline is a 'helix breaker.' Why?",b:"Its cyclic side chain connects back to the backbone nitrogen, making it rigid. It cannot adopt the dihedral angles required by an alpha-helix.",c:"Proteins"},
+  {f:"How many kcal per gram does fat provide vs. carbs?",b:"Fat: 9 kcal/g. Carbs and protein: 4 kcal/g. Fat provides more than twice the energy, stored anhydrously.",c:"Lipids"},
+  {f:"Allosteric enzymes show what curve?",b:"Sigmoidal (S-shaped). Cooperative binding. Compare to hyperbolic curve for standard Michaelis-Menten enzymes.",c:"Enzymes"},
+  {f:"Glucokinase vs. hexokinase?",b:"Glucokinase (liver): high Km, not inhibited by G6P, induced by insulin. Only works when glucose is high. Hexokinase (all cells): low Km, inhibited by G6P.",c:"Glycolysis"},
+  {f:"Three irreversible steps of glycolysis?",b:"Step 1 (hexokinase), Step 3 (PFK-1, committed/rate-limiting), Step 10 (pyruvate kinase).",c:"Glycolysis"},
+  {f:"What is substrate-level phosphorylation?",b:"Direct transfer of phosphate from a metabolite to ADP, making ATP. Occurs in glycolysis and TCA. No ETC needed.",c:"Glycolysis"},
+  {f:"P/O ratio: NADH vs. FADH2?",b:"NADH: ~2.5 ATP. FADH2: ~1.5 ATP. FADH2 enters at Complex II, which skips Complex I's proton pumping.",c:"ETC/ATP"},
+  {f:"What happens metabolically at hour 4-16 of fasting?",b:"Liver glycogen depleted. Gluconeogenesis ramps up using lactate, amino acids, and glycerol as substrates.",c:"Regulation"},
+  {f:"What happens after 48+ hours of fasting?",b:"Brain adapts to ketone bodies, reducing glucose demand. Muscle protein breakdown slows. Fat is the dominant fuel.",c:"Regulation"},
+  {f:"Explain DKA in one sentence.",b:"No insulin means cells cannot take up glucose, so the body over-mobilizes fat, producing so many ketone acids that blood pH drops dangerously.",c:"Regulation"},
+  {f:"What is the pentose phosphate pathway for?",b:"NADPH (for biosynthesis and antioxidant defense via glutathione) and ribose-5-phosphate (for nucleotide synthesis).",c:"Other Pathways"},
+  {f:"G6PD deficiency causes what?",b:"Reduced NADPH in RBCs, making them vulnerable to oxidative stress. Results in hemolytic anemia when exposed to oxidative triggers (certain drugs, fava beans).",c:"Other Pathways"},
+  {f:"How many ATP for palmitate activation?",b:"2 ATP equivalents (ATP cleaved to AMP + PPi, equivalent to 2 ATP). Always subtract this from total beta-oxidation yield.",c:"Fat Metabolism"},
+  {f:"Rounds of beta-oxidation for 16C fatty acid?",b:"(16/2) - 1 = 7 rounds. Produces 8 acetyl-CoA, 7 NADH, 7 FADH2.",c:"Fat Metabolism"},
+  {f:"Fed-state fate of acetyl-CoA in the liver?",b:"Fatty acid synthesis (lipogenesis). Citrate is exported from mitochondria and cleaved back to acetyl-CoA in the cytoplasm by ATP-citrate lyase.",c:"Regulation"},
+  {f:"How do RBCs produce ATP?",b:"Glycolysis only. No mitochondria, so no TCA or oxidative phosphorylation. Produce lactate.",c:"Regulation"},
+  {f:"Sickle cell: what is the primary structure change?",b:"Glu (charged, hydrophilic) to Val (nonpolar, hydrophobic) at position 6 of beta-globin. Creates a hydrophobic patch on the surface that drives aggregation under low O2.",c:"Proteins"},
+  {f:"What does F-2,6-bisphosphate do?",b:"Most potent activator of PFK-1. Made by PFK-2 (activated by insulin, inhibited by glucagon). Drives glycolysis in the fed state.",c:"Glycolysis"},
+  {f:"Glycogen branches every how many residues?",b:"Every 8-12 residues (alpha-1,6 linkage). More branches = faster glucose release from multiple ends.",c:"Carbs"},
+  {f:"The four bypass enzymes of gluconeogenesis?",b:"Pyruvate carboxylase (pyruvate to OAA), PEPCK (OAA to PEP), F-1,6-bisphosphatase (F-1,6-BP to F6P), G-6-phosphatase (G6P to glucose).",c:"Glycolysis"},
+  {f:"Biotin is a cofactor for which type of reaction?",b:"Carboxylation reactions (CO2 addition). Key enzymes: pyruvate carboxylase, acetyl-CoA carboxylase, propionyl-CoA carboxylase.",c:"Enzymes"},
+  {f:"How does the malate-aspartate shuttle work?",b:"Transfers NADH equivalents from cytoplasm into mitochondria. Cytoplasmic NADH reduces OAA to malate, malate enters mitochondria, is re-oxidized to OAA, producing mitochondrial NADH (~2.5 ATP).",c:"ETC/ATP"}
 ];
 
 // ===== SHORT ANSWER DATA =====
 const saData=[
   {q:"Explain why a competitive inhibitor increases apparent Km but does not change Vmax.",
    terms:[{t:"active site",w:2},{t:"competes",w:2},{t:"substrate",w:2},{t:"more substrate",w:3},{t:"overcome",w:2},{t:"Km increases",w:2},{t:"Vmax unchanged",w:2},{t:"same Vmax",w:2}],
-   model:"A competitive inhibitor binds the active site and competes with substrate. At any given [S], fewer enzyme molecules are available, so velocity is lower. However, if you add enough substrate, it outcompetes the inhibitor and all active sites are eventually occupied, reaching the same Vmax. The apparent Km increases because more substrate is needed to reach half-Vmax."},
+   model:"A competitive inhibitor binds the active site and competes directly with substrate for the same location. At any given substrate concentration, fewer enzyme molecules are available for catalysis, so velocity is lower. However, if you add enough substrate, it outcompetes the inhibitor and all active sites are eventually occupied, reaching the same Vmax. The apparent Km increases because more substrate is needed to reach half-Vmax when the inhibitor is present."},
+  {q:"Compare the three types of enzyme inhibition. For each, state where the inhibitor binds, what happens to Km, what happens to Vmax, and whether more substrate can overcome it.",
+   terms:[{t:"active site",w:2},{t:"allosteric",w:2},{t:"ES complex",w:2},{t:"Km increases",w:2},{t:"Vmax unchanged",w:2},{t:"Km unchanged",w:2},{t:"Vmax decreases",w:2},{t:"Km decreases",w:2},{t:"overcome",w:1},{t:"uncompetitive",w:1}],
+   model:"Competitive: binds the active site, competing with substrate. Km increases, Vmax unchanged. Can be overcome by adding more substrate. Noncompetitive: binds an allosteric site (not the active site). Substrate can still bind normally, so Km is unchanged. But catalysis is impaired, so Vmax decreases. Cannot be overcome by more substrate. Uncompetitive: binds only the enzyme-substrate complex. This stabilizes the ES complex, making substrate appear to bind more tightly (Km decreases). But it blocks catalysis, so Vmax also decreases. Both fall proportionally. Cannot be overcome by more substrate."},
   {q:"Walk through the ATP accounting for one molecule of glucose through aerobic metabolism. Show your work.",
    terms:[{t:"glycolysis",w:2},{t:"2 ATP",w:2},{t:"2 NADH",w:2},{t:"PDH",w:1},{t:"TCA",w:2},{t:"3 NADH",w:1},{t:"FADH2",w:1},{t:"GTP",w:1},{t:"30",w:3},{t:"32",w:3},{t:"ETC",w:1},{t:"electron transport",w:1}],
-   model:"Glycolysis: 2 ATP + 2 NADH (worth ~5 ATP via malate-aspartate shuttle). PDH: 2 NADH (worth ~5 ATP). TCA (x2 turns): 6 NADH (~15 ATP) + 2 FADH2 (~3 ATP) + 2 GTP (~2 ATP). Total: 2 + 5 + 5 + 15 + 3 + 2 = approximately 30-32 ATP."},
+   model:"Glycolysis: 2 ATP (net) + 2 NADH (~5 ATP via malate-aspartate shuttle) = 7 ATP. PDH bridge (2 pyruvates): 2 NADH (~5 ATP). TCA (2 turns): 6 NADH (~15 ATP) + 2 FADH2 (~3 ATP) + 2 GTP (~2 ATP) = 20 ATP. Total: 7 + 5 + 20 = approximately 30-32 ATP. Note: use NADH = 2.5 and FADH2 = 1.5 (modern P/O ratios), not the outdated values of 3 and 2."},
   {q:"You observe that oxygen consumption in a cell goes UP while ATP production goes DOWN. Explain what is happening and name the type of agent responsible.",
    terms:[{t:"uncoupler",w:3},{t:"proton",w:2},{t:"gradient",w:2},{t:"leak",w:2},{t:"heat",w:2},{t:"ETC",w:1},{t:"electron transport",w:1},{t:"ATP synthase",w:2},{t:"DNP",w:1},{t:"thermogenin",w:1}],
-   model:"An uncoupler (like DNP or thermogenin) allows protons to leak across the inner mitochondrial membrane, collapsing the electrochemical gradient. The ETC runs faster trying to restore the gradient (more O2 consumed), but ATP synthase has no gradient to drive it (less ATP produced). The energy is dissipated as heat. An inhibitor would cause both O2 consumption and ATP production to drop."},
-  {q:"Explain why muscle glycogen cannot be used to maintain blood glucose, but liver glycogen can.",
+   model:"An uncoupler (like DNP or thermogenin) allows protons to leak across the inner mitochondrial membrane without going through ATP synthase. This collapses the electrochemical gradient. The ETC runs faster trying to restore the gradient (more O2 consumed), but ATP synthase has no driving force (less ATP). Energy is released as heat. An ETC inhibitor would do the opposite: both O2 consumption and ATP would drop together."},
+  {q:"Explain why muscle glycogen cannot maintain blood glucose, but liver glycogen can.",
    terms:[{t:"glucose-6-phosphatase",w:3},{t:"G6P",w:2},{t:"free glucose",w:2},{t:"liver",w:2},{t:"muscle",w:2},{t:"export",w:1},{t:"blood",w:1}],
-   model:"The final step of glycogenolysis produces glucose-6-phosphate (G6P). To release free glucose into the blood, G6P must be dephosphorylated by glucose-6-phosphatase. The liver has this enzyme and can export free glucose. Muscle lacks glucose-6-phosphatase, so G6P is trapped in the cell and must enter glycolysis. Muscle glycogen fuels muscle only."},
+   model:"Glycogen breakdown produces glucose-6-phosphate (G6P). To release free glucose into the bloodstream, G6P must be dephosphorylated by glucose-6-phosphatase. The liver has this enzyme and can export free glucose to maintain blood levels for all tissues. Muscle lacks glucose-6-phosphatase, so G6P is trapped inside the cell and must enter glycolysis. Muscle glycogen fuels muscle contraction only."},
   {q:"Describe the metabolic progression during a 72-hour fast. What happens at each stage and why?",
    terms:[{t:"glycogen",w:2},{t:"gluconeogenesis",w:3},{t:"lipolysis",w:2},{t:"beta-oxidation",w:2},{t:"ketone",w:3},{t:"brain",w:2},{t:"insulin",w:1},{t:"glucagon",w:1},{t:"fatty acid",w:1},{t:"protein sparing",w:2}],
-   model:"Hours 0-4: Liver glycogen breakdown maintains blood glucose. Hours 4-16: Glycogen runs low; gluconeogenesis ramps up using lactate, amino acids, and glycerol. Hours 16-48: Fat mobilization increases. Beta-oxidation provides acetyl-CoA. Liver produces ketone bodies. After 48 hours: Brain adapts to ketone bodies, reducing glucose demand and sparing muscle protein from being broken down for gluconeogenesis. Glucagon dominates throughout."},
+   model:"Hours 0-4: Liver glycogen breakdown (glycogenolysis) maintains blood glucose. Hours 4-16: Liver glycogen runs low. Gluconeogenesis ramps up using lactate, amino acids, and glycerol. Hours 16-48: Fat mobilization increases sharply. Beta-oxidation provides acetyl-CoA. The liver produces ketone bodies as acetyl-CoA exceeds TCA capacity. After 48 hours: Brain adapts to use ketone bodies, reducing glucose demand. This spares muscle protein from being broken down for gluconeogenesis. Glucagon dominates throughout; insulin is suppressed."},
   {q:"A patient with Type 1 diabetes presents with very high blood glucose, rapid breathing, and fruity-smelling breath. Trace the metabolic pathways that led to this state.",
    terms:[{t:"insulin",w:3},{t:"glucose",w:2},{t:"uptake",w:1},{t:"lipolysis",w:2},{t:"beta-oxidation",w:2},{t:"acetyl-CoA",w:2},{t:"ketone",w:3},{t:"ketoacidosis",w:3},{t:"DKA",w:3},{t:"pH",w:2},{t:"acid",w:2}],
-   model:"Without insulin, cells cannot take up glucose despite high blood levels. The body responds as if fasting: glucagon signals dominate. Massive lipolysis releases fatty acids. The liver performs excessive beta-oxidation, producing more acetyl-CoA than TCA can handle. Excess acetyl-CoA is converted to ketone bodies (acetoacetate, beta-hydroxybutyrate, acetone). These are acids and lower blood pH (ketoacidosis). The fruity breath is acetone. Rapid breathing (Kussmaul) is the body trying to blow off CO2 to compensate for the acidosis."},
-  {q:"Compare and contrast NADH and FADH2 in terms of where they enter the ETC and how much ATP they yield. Explain why the yields differ.",
+   model:"Without insulin, cells cannot take up glucose despite very high blood levels. The body responds as if fasting: glucagon signals dominate. Massive lipolysis releases fatty acids into the blood. The liver performs excessive beta-oxidation, generating far more acetyl-CoA than the TCA cycle can handle. The overflow is converted to ketone bodies (acetoacetate, beta-hydroxybutyrate, acetone). These are acids that lower blood pH (ketoacidosis, also called DKA). The fruity breath is exhaled acetone. Rapid breathing (Kussmaul respirations) is the body's attempt to compensate for metabolic acidosis by exhaling CO2."},
+  {q:"Compare NADH and FADH2 in terms of where they enter the ETC and why their ATP yields differ.",
    terms:[{t:"Complex I",w:2},{t:"Complex II",w:2},{t:"NADH",w:1},{t:"FADH2",w:1},{t:"2.5",w:2},{t:"1.5",w:2},{t:"proton",w:2},{t:"pump",w:2}],
-   model:"NADH donates electrons at Complex I, which pumps protons. Electrons then pass through Complex III (pumps protons) and Complex IV (pumps protons). FADH2 donates electrons at Complex II, which does NOT pump protons. So FADH2 skips one proton-pumping step. Fewer protons pumped means a smaller contribution to the gradient, yielding ~1.5 ATP vs ~2.5 ATP for NADH."},
-  {q:"Explain why the body does not simultaneously perform fatty acid synthesis and beta-oxidation at the same time. What molecular mechanism prevents this?",
-   terms:[{t:"malonyl-CoA",w:3},{t:"CPT-I",w:3},{t:"inhibit",w:2},{t:"fatty acid synthesis",w:2},{t:"beta-oxidation",w:2},{t:"mitochondria",w:1},{t:"cytoplasm",w:1},{t:"acetyl-CoA carboxylase",w:2}],
-   model:"Fatty acid synthesis occurs in the cytoplasm. Its first committed step is catalyzed by acetyl-CoA carboxylase (ACC), which produces malonyl-CoA. Malonyl-CoA inhibits CPT-I, the enzyme that transports fatty acids into the mitochondria for beta-oxidation. So when the cell is making fat (high malonyl-CoA), it simultaneously blocks fat burning. When insulin is low and glucagon is high, ACC is inactive, malonyl-CoA drops, CPT-I is released, and beta-oxidation proceeds."}
+   model:"NADH donates electrons at Complex I, which pumps protons into the intermembrane space. Electrons then pass through Complex III (pumps protons) and Complex IV (pumps protons). FADH2 donates electrons at Complex II, which transfers electrons to CoQ but does NOT pump protons. FADH2 therefore skips the proton-pumping step at Complex I. Fewer protons pumped = smaller contribution to the gradient = less ATP. Result: NADH yields ~2.5 ATP; FADH2 yields ~1.5 ATP."}
 ];
 
 // ===== RENDER QUIZ =====
